@@ -28,19 +28,19 @@ def test_init_tbl() -> bool:
 	keys_results = (
 		(
 			['info'], 
-			{'info': {}, '#': [], '__keys': ['info']}
+			{'info': {}, '#': [], 'keys': ['info']}
 			),
 		(
 			['test', 'info'],
-			{'test': {}, 'info': {}, '#': [], '__keys': ['test', 'info']}
+			{'test': {}, 'info': {}, '#': [], 'keys': ['test', 'info']}
 		),
 		(
 			[1,2,3,4,5],
-			{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, '#': [], '__keys': [1, 2, 3, 4, 5]}
+			{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, '#': [], 'keys': [1, 2, 3, 4, 5]}
 		),
 		(
 			[],
-			{'#': [], '__keys': []}
+			{'#': [], 'keys': []}
 		)
 	)
 	for k, r in keys_results:
@@ -56,7 +56,7 @@ def test_print_tbl() -> None:
 	"""Tests print table."""
 	print_test_header("print tables")
 	test_dicts = (
-		{1: {1:1, 2:2}, 2: {1:1, 2:2}, 3: {1:1, 2:2}, 4: {1:1, 2:2}, 5: {1:1, 2:2}, '#': [1, 2], '__keys': [1, 2, 3, 4, 5]},
+		{1: {1:1, 2:2}, 2: {1:1, 2:2}, 3: {1:1, 2:2}, 4: {1:1, 2:2}, 5: {1:1, 2:2}, '#': [1, 2], 'keys': [1, 2, 3, 4, 5]},
 	)
 	for test in test_dicts:
 		print_tbl(test)

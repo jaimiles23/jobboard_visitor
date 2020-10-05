@@ -3,7 +3,7 @@
  * @author [Jai Miles]
  * @email [jaimiles23@gmail.com]
  * @create date 2020-10-04 21:25:45
- * @modify date 2020-10-05 14:52:02
+ * @modify date 2020-10-05 14:58:33
  * @desc [
     Contains TableInfo class. Stores & Prints information.
  ]
@@ -33,17 +33,23 @@ class TableInfo(TableInfo_AuxMethods):
 		"""Initializes TableInfo objects with attributes based on TableInfo keys.
 
 		Args:
-			tbl_keys (Union[dict, Iterator[Any]]): List of attributes to create
+			tbl_keys (Union[dict, Iterator[Any]]): List of attributes to create.
+		
+		NOTE:
+			- In the future, may be interested to explore creating flexible getter/setter
+			methods for string-defined attributes?
+				- This will simplify the code of appending the value to the list,
+				and can include update col_lengths value in this method.
 		"""
 		if not isinstance(tbl_keys, dict) and not hasattr(tbl_keys, '__iter__'):
 			raise Exception("Initialization TableInfo must be type: List, Tuple, or Dictionary.")
-
 		tbl_keys = tbl_keys if hasattr(tbl_keys, '__iter__') else list(tbl_keys.keys())
-		self.__keys = tbl_keys
-		self.__records = 0
-		self.__col_lengths = {k:0 for k in tbl_keys}
+		
+		self.records = 0
+		self.keys = tbl_keys
+		self.width_per_col = {k:0 for k in tbl_keys}
 
-		for k in self.__keys:
+		for k in self.keys:
 			setattr(self, k, list())
 		return None
 	
@@ -77,7 +83,7 @@ class TableInfo(TableInfo_AuxMethods):
 		
 		def convert_class_to_dict(entry: UserDefinedClass) -> dict:
 			attr_dict = {}
-			for k in self.__keys:
+			for k in self.keys:
 				try: val = getattr(entry, k)
 				except AttributeError: val = None
 				finally: attr_dict[k] = val
@@ -85,9 +91,9 @@ class TableInfo(TableInfo_AuxMethods):
 		
 		def convert_iter_to_dict(entry: Iterator) -> dict:
 			iter_dict = {}
-			for i in range(len(self.__keys)):
+			for i in range(len(self.keys)):
 				val = entry[i] if i < len(entry) else None
-				iter_dict[self.__keys[i]] = val
+				iter_dict[self.keys[i]] = val
 			return iter_dict
 
 
@@ -103,16 +109,16 @@ class TableInfo(TableInfo_AuxMethods):
 		## Convert Iterable to dict
 		elif hasattr(entry, '__iter__'):
 			entry_dict = convert_iter_to_dict(entry)
-			if len(entry) != len(self.__keys):
+			if len(entry) != len(self.keys):
 				flag_show_warning, warn_type = True, WARN_LEN
 		
 		elif isinstance(entry, dict):
 			entry_dict = entry
-			if entry.keys() != self.__keys:
+			if entry.keys() != self.keys:
 				flag_show_warning, warn_type = True, WARN_KEYS
 
 		## Add attribute info
-		for k in self.__keys:
+		for k in self.keys:
 			val = entry_dict.get(k, None)
 			tbl_info = getattr(self, k) + [val]
 			setattr(self, k, tbl_info)
@@ -123,7 +129,7 @@ class TableInfo(TableInfo_AuxMethods):
 				warn_type= warn_type, entry= entry, tbl_info= tbl_info, show_values= show_warn_vals)
 		
 		## Wrap-up
-		self.__records += 1
+		self.records += 1
 		self.update_col_lengths(entry_dict)
 		return None
 	
@@ -134,11 +140,11 @@ class TableInfo(TableInfo_AuxMethods):
 		Args:
 			entry_dict (dict): values to compare to current column lengths.
 		"""
-		for k in self.__keys:
+		for k in self.keys:
 			val = entry_dict.get(k, 0)
 			val = val if val else 0
-			if val > self.__col_lengths[k]:
-				self.__col_lengths[k] = val
+			if val > self.width_per_col[k]:
+				self.width_per_col[k] = val
 		return None
 	
 
@@ -180,6 +186,7 @@ class TableInfo(TableInfo_AuxMethods):
 		"""
 		col_sep = col_sep if v_lines else ''
 		col_widths: dict = self.get_col_widths_dict(num_spaces, col_sep)
+	
 
 
 
@@ -188,6 +195,7 @@ class TableInfo(TableInfo_AuxMethods):
 ##########
 # Test
 ##########
+
 keys = ['a', 'b']
 tbl = TableInfo(keys)
 print(tbl.__dict__)
@@ -196,7 +204,8 @@ print(tbl.a, tbl.b)
 tbl.add_entry([3,5])
 print(tbl.a, tbl.b)
 
-add = {'a':1, 'b':8}
-tbl.add_entry(add)
+add = [{'a':1, 'b':8}, {'a':2, 'b':20}]
+tbl.add_entries(add)
 print(tbl.a, tbl.b)
+print(tbl.width_per_col)
 

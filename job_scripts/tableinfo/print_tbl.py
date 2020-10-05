@@ -74,22 +74,6 @@ def only_print(*args):
 
 
 
-def get_row_heights(tbl_info: object col_widths: dict) -> dict:
-	"""Returns dictionary of maximum height required for each row."""
-	def get_max_row_height(row: int) -> int:
-		"""Returns max height required for each row."""
-		max_height = 1
-		for k in tbl_info.keys():
-			row_col_len = len(str(tbl_info[k][row]))
-			col_len = col_widths[k]
-
-			row_col_height = math.ceil(row_col_len/col_len)
-			if row_col_height > max_height:
-				max_height = row_col_height
-		return max_height
-
-	print(tbl_info[TBL_RECORD_KEY])
-	return {r: get_max_row_height(r) for r in tbl_info[TBL_RECORD_KEY]}
 
 
 def print_col_sep(col_sep: str, num_spaces: int) -> None:
@@ -144,7 +128,7 @@ def print_header(
 def test_print_tbl() -> None:
 	"""Tests print table."""
 	test_dicts = (
-		{1: {1:1, 2:2}, 2: {1:1, 2:2}, 3: {1:1, 2:2}, 4: {1:1, 2:2}, 5: {1:1, 2:2}, '#': [1, 2], '__keys': [1, 2, 3, 4, 5]},
+		{1: {1:1, 2:2}, 2: {1:1, 2:2}, 3: {1:1, 2:2}, 4: {1:1, 2:2}, 5: {1:1, 2:2}, '#': [1, 2], 'keys': [1, 2, 3, 4, 5]},
 	)
 	for test in test_dicts:
 		print_tbl(test)
