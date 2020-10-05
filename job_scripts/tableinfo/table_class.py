@@ -140,6 +140,17 @@ class TableInfo(TableInfo_AuxMethods):
 			if val > self.__col_lengths[k]:
 				self.__col_lengths[k] = val
 		return None
+	
+
+	def add_entries(self, entries: Iterator) -> None:
+		"""Calls add_entry() method on list.
+
+		Args:
+			entries (Iterator): Iterable of entries to add.
+		"""
+		for entry in entries:
+			self.add_entry(entry)
+		return None
 
 
 	##########
