@@ -1,0 +1,1 @@
+@python.exe C:\Users\Jai\Documents\github\job_visitor\main.py %* & pause
