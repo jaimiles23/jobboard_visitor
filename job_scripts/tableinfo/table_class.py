@@ -3,7 +3,7 @@
  * @author [Jai Miles]
  * @email [jaimiles23@gmail.com]
  * @create date 2020-10-04 21:25:45
- * @modify date 2020-10-04 21:25:45
+ * @modify date 2020-10-05 14:52:02
  * @desc [
     Contains TableInfo class. Stores & Prints information.
  ]
@@ -41,6 +41,7 @@ class TableInfo(TableInfo_AuxMethods):
 		tbl_keys = tbl_keys if hasattr(tbl_keys, '__iter__') else list(tbl_keys.keys())
 		self.__keys = tbl_keys
 		self.__records = 0
+		self.__col_lengths = {k:0 for k in tbl_keys}
 
 		for k in self.__keys:
 			setattr(self, k, list())
@@ -68,57 +69,76 @@ class TableInfo(TableInfo_AuxMethods):
 		
 		Auxiliary methods:
 			- is_userdefinedclass(): returns boolean if object is a user defined class.
+			- convert_class_to_dict(): converts class to dict
+			- convert_iter_to_dict(): convert iter to dict
 		"""
 		def is_userdefinedclass(cls):
 			return str(cls).startswith('<class ')
-
-		## add_entry
-		flag_show_warning, warn_type = False, None
-		entry_num = self.__records + 1
 		
-		## Convert user defined object to dict
-		if is_userdefinedclass(entry):
+		def convert_class_to_dict(entry: UserDefinedClass) -> dict:
 			attr_dict = {}
 			for k in self.__keys:
 				try: val = getattr(entry, k)
 				except AttributeError: val = None
-				finally: attr_dict[k][entry_num] = val
-
-			entry = attr_dict		# Add to tbl_info w/ dict method
-			if None in attr_dict.values():
-				flag_show_warning, warn_type = True, WARN_ATTR
+				finally: attr_dict[k] = val
+			return attr_dict
 		
-		## Set Table Info from dict
-		if isinstance(entry, dict):	
-			if entry.keys() != self.__keys:
-				flag_show_warning, warn_type = True, WARN_KEYS
-			
-			for k in self.__keys:
-				try: val = entry[k]
-				except KeyError: val = None
-				finally: 
-					tbl_info = getattr(self, k)
-					tbl_info.append(val)
-					setattr(self, k, tbl_info)
-		
-		## Set Table Info from list
-		elif hasattr(entry, '__iter__'):
-			if len(entry) != len(self.__keys):
-				flag_show_warning, warn_type = True, WARN_LEN
-
+		def convert_iter_to_dict(entry: Iterator) -> dict:
+			iter_dict = {}
 			for i in range(len(self.__keys)):
 				val = entry[i] if i < len(entry) else None
-				tbl_info = getattr(self, self.__keys[i])
-				tbl_info.append(val)
-				setattr(self, self.__keys[i], tbl_info)
+				iter_dict[self.__keys[i]] = val
+			return iter_dict
 
+
+		##### add_entry main method()
+		flag_show_warning, warn_type = False, None
+		
+		## Convert user defined object to dict
+		if is_userdefinedclass(entry):
+			entry_dict = convert_class_to_dict(entry)
+			if None in entry.values():
+				flag_show_warning, warn_type = True, WARN_ATTR
+		
+		## Convert Iterable to dict
+		elif hasattr(entry, '__iter__'):
+			entry_dict = convert_iter_to_dict(entry)
+			if len(entry) != len(self.__keys):
+				flag_show_warning, warn_type = True, WARN_LEN
+		
+		elif isinstance(entry, dict):
+			entry_dict = entry
+			if entry.keys() != self.__keys:
+				flag_show_warning, warn_type = True, WARN_KEYS
+
+		## Add attribute info
+		for k in self.__keys:
+			val = entry_dict.get(k, None)
+			tbl_info = getattr(self, k) + [val]
+			setattr(self, k, tbl_info)
+		
 		# Show any warnings
 		if flag_show_warning:
 			TblEntryWarning(
 				warn_type= warn_type, entry= entry, tbl_info= tbl_info, show_values= show_warn_vals)
 		
-		## Increment number of records
+		## Wrap-up
 		self.__records += 1
+		self.update_col_lengths(entry_dict)
+		return None
+	
+
+	def update_col_lengths(self, entry_dict) -> None:
+		"""Updates the column lengths if entry_dict[k] is > than entry.
+
+		Args:
+			entry_dict (dict): values to compare to current column lengths.
+		"""
+		for k in self.__keys:
+			val = entry_dict.get(k, 0)
+			val = val if val else 0
+			if val > self.__col_lengths[k]:
+				self.__col_lengths[k] = val
 		return None
 
 
@@ -169,7 +189,3 @@ add = {'a':1, 'b':8}
 tbl.add_entry(add)
 print(tbl.a, tbl.b)
 
-## NOTE 
-		"""
-	
-		"""
