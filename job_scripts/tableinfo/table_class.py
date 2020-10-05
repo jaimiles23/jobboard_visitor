@@ -5,7 +5,7 @@
  * @create date 2020-10-04 21:25:45
  * @modify date 2020-10-04 21:25:45
  * @desc [
-    Contains TableInfo class for storing using information
+    Contains TableInfo class. Stores & Prints information.
  ]
  */
  """
@@ -13,15 +13,17 @@
 # Initialize table
 ##########
 
+from aux_methods import TableInfo_AuxMethods
 from constants import WARN_ATTR, WARN_KEYS, WARN_LEN, WARN_STACK
 from custom_errors import TblEntryWarning
 from custom_objects import Any, Iterator, Table, Union, UserDefinedClass
+
 
 ##########
 # TableInfo Class
 ##########
 
-class TableInfo(object):
+class TableInfo(TableInfo_AuxMethods):
 	"""Custom object to store user information"""
 
 	##########
@@ -72,7 +74,7 @@ class TableInfo(object):
 
 		## add_entry
 		flag_show_warning, warn_type = False, None
-		entry_num = self.records + 1
+		entry_num = self.__records + 1
 		
 		## Convert user defined object to dict
 		if is_userdefinedclass(entry):
@@ -108,7 +110,7 @@ class TableInfo(object):
 				val = entry[i] if i < len(entry) else None
 				tbl_info = getattr(self, self.__keys[i])
 				tbl_info.append(val)
-				setattr(self, k, tbl_info)
+				setattr(self, self.__keys[i], tbl_info)
 
 		# Show any warnings
 		if flag_show_warning:
@@ -124,6 +126,7 @@ class TableInfo(object):
 	# Print information
 	##########
 	def print_info(
+		self,
 		num_spaces: int = 3,
 		row_sep: str = '-',
 		col_sep: str = '|', 
@@ -131,21 +134,42 @@ class TableInfo(object):
 		v_lines: bool = False,
 		column_alignment: Union[dict, None] = {}
 	):
-	"""Prints information stored in the table.
+		"""Prints information stored in the table.
 
-	Args:
-		num_spaces (int, optional): Number of spaces b/w col separator. Defaults to 3.
-		row_sep (str, optional): Char to separate rows. Defaults to '-'.
-		col_sep (str, optional): Char to separate cols. Defaults to '|'.
-		h_lines (bool, optional): Print lines b/w rows. Defaults to False.
-		v_lines (bool, optional): Print lines b/w columns. Defaults to False.
-		column_alignment (Union[dict, None], optional): colname: (l,r,c) alignment. Defaults to None.
+		Args:
+			num_spaces (int, optional): Number of spaces b/w col separator. Defaults to 3.
+			row_sep (str, optional): Char to separate rows. Defaults to '-'.
+			col_sep (str, optional): Char to separate cols. Defaults to '|'.
+			h_lines (bool, optional): Print lines b/w rows. Defaults to False.
+			v_lines (bool, optional): Print lines b/w columns. Defaults to False.
+			column_alignment (Union[dict, None], optional): colname: (l,r,c) alignment. Defaults to None.
+		
+		Note:
+			- Uses auxiliary methods in "aux_methods" module.
+		"""
+		col_sep = col_sep if v_lines else ''
+		col_widths: dict = self.get_col_widths_dict(num_spaces, col_sep)
+
+
+
+
+
+##########
+# Test
+##########
+keys = ['a', 'b']
+tbl = TableInfo(keys)
+print(tbl.__dict__)
+tbl.add_entry([1,2])
+print(tbl.a, tbl.b)
+tbl.add_entry([3,5])
+print(tbl.a, tbl.b)
+
+add = {'a':1, 'b':8}
+tbl.add_entry(add)
+print(tbl.a, tbl.b)
+
+## NOTE 
+		"""
 	
-	Note:
-		- Uses auxiliary methods in "aux" module.
-	"""
-	col_sep = col_sep if v_lines else ''
-
-
-
-
+		"""
