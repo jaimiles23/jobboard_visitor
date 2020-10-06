@@ -38,29 +38,27 @@ class JobSite(object):
 
     max_sites_opened = constants.MAX_SITES_OPENED
     sites_opened = 0
-    flag_can_open = True
+    flag_show_opened_max_sites = True
 
     attrs_to_print = (
         'ident',
         'name',
-        ## ADD ALL OF THESE BELOW
         'flag_opened',
         'sites',
         'queue_index',
         'queue_priority',
-        'searched_queue',
+        'checked_jobs',
     )
-
 
     @classmethod
     def print_opened_all_sites(cls) -> None:
-        """Prints message that all websites have been opened if flag_can_open
+        """Prints message that all websites have been opened if flag_show_opened_max_sites
 
-        Changes flag_can_open to false.
+        Changes flag_show_opened_max_sites to false.
         """
-        if JobSite.flag_can_open:
+        if not JobSite.flag_show_opened_max_sites:
             print(f"- Opened {cls.sites_opened} / {cls.max_sites_opened}")
-        JobSite.flag_can_open = False
+        JobSite.flag_show_opened_max_sites = True
         return
 
 
@@ -133,7 +131,6 @@ class JobSite(object):
                 else: return helper(arr, mid + 1, r, num)
             
             try:
-                print(f"{num=}")
                 int(num)
                 return helper(arr, l, r, num)
             except:
@@ -144,11 +141,10 @@ class JobSite(object):
         if len(JobSite.jobsite_queue) == len(all_jobsites):
             return
         
+        print("- Cleaning queue of non-existent jobs")
         ## sort job ids to look through
         jobsite_ids = [jobsite.ident for jobsite in all_jobsites]
         jobsite_ids.sort()
-        print(f"{jobsite_ids=}")
-        print(f"{JobSite.jobsite_queue=}")
 
         ## remove unnecessary items from queue
         removed = 0
@@ -156,20 +152,16 @@ class JobSite(object):
             binsearch_results = bin_search(jobsite_ids, 0, len(jobsite_ids) - 1, JobSite.jobsite_queue[i - removed])
             
             if binsearch_results == -1:
-                print(f"- id ({JobSite.jobsite_queue[i - removed]=}) not located - removed")
+                print(f"\t- id ({JobSite.jobsite_queue[i - removed]=}) not located - removed")
                 del JobSite.jobsite_queue[i - removed]
                 removed += 1
 
-
-        print(f"{jobsite_ids=}")
-        print(f"{JobSite.jobsite_queue=}")
-
         ## update queue indices
-        print("- update queue indices.")
         for job in all_jobsites:
             job.queue_index = job.get_queue_index()
+        print("- Updated queue.")
         return 
-                
+
 
     ##########
     # Init
@@ -206,6 +198,15 @@ class JobSite(object):
         """Called at end of __init__ by dataclass."""
         self.queue_index = self.get_queue_index()
 
+        ## Init flags
+        self.flag_opened = False
+
+        if isinstance(self.urls, str):
+            self.sites = 1
+        else:
+            self.sites = len(self.urls)
+        return
+
 
     ##########
     # Instance methods
@@ -234,48 +235,56 @@ class JobSite(object):
         print(f"- Adding {self.name} ({self.ident}) to job queue at index {index}")
         return index
 
+    def set_checked_jobs(self) -> None:
+        """sets how many items were checks first in queue for this jobsite."""
+        self.checked_jobs = math.ceil(len( JobSite.jobsite_queue) / self.queue_priority)
+        return
 
-    def set_flag_open(self) -> bool:
-        """Returns self.flag_open to determine if url should be opened.
+
+    def set_flag_opened(self) -> bool:
+        """Returns self.flag_opened to determine if url should be opened.
         """
-        flag_open = (
+        flag_opened = (
             (JobSite.max_sites_opened > JobSite.sites_opened) and
-            (self.queue_index <= math.ceil(len( JobSite.jobsite_queue) / self.queue_priority))
+            (self.queue_index <= self.checked_jobs)
         )
-        if flag_open:
+        if flag_opened:
             JobSite.sites_opened += 1
-        self.flag_open = flag_open
+        self.flag_opened = flag_opened
     
 
     def open_websites(self) -> None:
-        """Opens the website if self.flag_open.
+        """Opens the website if self.flag_opened.
         
         Appends tuple of index & id to used_jobsites to change queue later.
         """
         if JobSite.sites_opened == JobSite.max_sites_opened:
             JobSite.print_opened_all_sites()
-            return None
+            return
         elif JobSite.sites_opened + len(self.urls) > JobSite.max_sites_opened:
-            self.print_exceeds_site_count(flag_open= False)
-            return None
+            self.print_exceeds_site_count(flag_opened= False)
+            return
         
-        for url in self.urls:
-            self.set_flag_open()
-            self.print_queue_info(self.flag_open)
-            if self.flag_open:
+        self.set_checked_jobs()
+        self.set_flag_opened()
+
+        for url in self.urls:    
+            self.print_queue_info(self.flag_opened)
+            if self.flag_opened:
                 pass
+
                 # webbrowser.open(url)
             
-        if self.flag_open:
+        if self.flag_opened:
             JobSite.used_jobsites.append( (self.queue_index, self.ident))
         return None
     
 
-    def print_site_info(self, flag_open: bool, details: str) -> None:
+    def print_site_info(self, flag_opened: bool, details: str) -> None:
         """Prints information about the website, including if opened & details.
 
         Args:
-            flag_open (bool): Prints if website was opened.
+            flag_opened (bool): Prints if website was opened.
             details (str): Extra details to include
         """
         opened_dict = {
@@ -284,28 +293,28 @@ class JobSite(object):
         }
         print(f"""- {self.name} ({self.ident}) 
     {details}
-    status: {opened_dict[flag_open]}
+    status: {opened_dict[flag_opened]}
     sites opened: {JobSite.sites_opened} / {JobSite.max_sites_opened}""")
         return None
         
 
-    def print_exceeds_site_count(self, flag_open: bool) -> None:
+    def print_exceeds_site_count(self, flag_opened: bool) -> None:
         """Prints message that number of URLs to open exceeds available webpages.
 
         Args:
-            flag_open (bool): if website was opened.
+            flag_opened (bool): if website was opened.
         """
         details = f"\t{len(self.urls)} websites - exceeds {JobSite.max_sites_opened} websites."
-        self.print_site_info(flag_open, details)
+        self.print_site_info(flag_opened, details)
     
 
-    def print_queue_info(self, flag_open: bool) -> None:
+    def print_queue_info(self, flag_opened: bool) -> None:
         """Prints information about whether the site was opened or not.
 
         Args:
-            flag_open (bool): if website was opened.
+            flag_opened (bool): if website was opened.
         """
         details = f"Q_index: {self.queue_index}, \
 priority_Q: {self.queue_priority}, \
 seached first {math.ceil(len( JobSite.jobsite_queue) / self.queue_priority)}"
-        self.print_site_info(flag_open, details)
+        self.print_site_info(flag_opened, details)
