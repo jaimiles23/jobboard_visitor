@@ -132,7 +132,9 @@ class TableInfo(TableInfo_AuxMethods):
 		# Show any warnings
 		if flag_show_warning:
 			TblEntryWarning(
-				warn_type= warn_type, entry= entry, tbl_info= tbl_info, show_values= show_warn_vals)
+				warn_type= warn_type, 
+				entry= entry_dict, 
+				show_values= show_warn_vals)
 		
 		## Wrap-up
 		self.records += 1

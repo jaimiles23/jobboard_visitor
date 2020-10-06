@@ -27,6 +27,9 @@ from custom_objects import Any, Iterator, Union, UserDefinedClass
 @dataclass
 class TblEntryWarning(UserWarning):
 	"""Class to show warnings about table entries."""
+	MSG_ITERATOR = "Iterator length did not match Table fields."
+	MSG_CLASS = "Class Attributes did not contain all Table fields."
+	MSG_DICT = "Dictionary did not contain all Table fields."
 
 	##### Init
 	"""Uses the warn_type (str) to determine what warning message to call.
@@ -39,35 +42,30 @@ class TblEntryWarning(UserWarning):
 	"""
 	warn_type: str
 	entry: Union[dict, Iterator[Any], UserDefinedClass]
-	tbl_info: dict
 	show_values: bool = False
 	stack: int = WARN_STACK
 
 	def __post_init__(self):
 		warn_dict = {
-			WARN_LEN		:	self.warn_entry_length,
-			WARN_KEYS		:	self.warn_entry_keys,
-			WARN_ATTR	:	self.warn_entry_attr,
+			WARN_LEN		:	self.MSG_ITERATOR,
+			WARN_KEYS		:	self.MSG_CLASS,
+			WARN_ATTR		:	self.MSG_DICT,
 		}
-		warn_dict[self.warn_type]()
+		self.msg = warn_dict[self.warn_type]
+		
 
-
-	##### Warning messages
-	def warn_entry_length(self):
+	def warn_message(self):
 		"""Shows warning that iterator length does not match keys length."""
-		warning_message = ""
+		if self.show_values:
+			msg_val_assignment = ['\nFields assigned values as follow:']
+			for k, v in self.entry:
+				val_msg = f"\t- {k} : {v}\n"
+				msg_val_assignment.append(val_msg)
+			warning_message = ''.join(msg_val_assignment)
+		else:
+			warning_message = ''
+		
 		warnings.warn(warning_message)
 		
 		# https://pymotw.com/2/warnings/ - use stack to show number of lines to move up.
 
-
-	def warn_entry_keys(self):
-		"""Shows warning that entry.keys do not match table.keys."""
-		warning_message = ""
-		warnings.warn(warning_message)
-
-
-	def warn_entry_attr(self):
-		"""Shows warning that entry attributes do not match table.keys."""
-		warning_message = ""
-		warnings.warn(warning_message)

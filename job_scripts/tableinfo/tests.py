@@ -52,7 +52,6 @@ def test_init_tbl() -> bool:
 			except:
 				print( getattr(test, key), value)
 				raise Exception()
-	print('Completed Initializing tables test')
 
 
 ##########
