@@ -14,7 +14,7 @@
 ##########
 
 ## allowed space on terminal
-ALLOWED_TERM_WIDTH = 0.75
+ALLOWED_TERM_WIDTH = 0.70   # TODO: See if I can move this to aux methods class var?
 
 ## warnings
 WARN_STACK = 2

@@ -163,6 +163,22 @@ def test_print_info():
 		tbl.add_entry(r)
 	
 	tbl.print_info()
+
+
+	## Test 3
+	keys = ['a', 'b', 'c', 'd']
+	tbl = TableInfo(keys)
+
+	records = (
+		['asdfasf', 1, 2, '1' * 500],
+		[None, None, 1, 2],
+		['adsfadsfh', '5' * 100, 5, '12'],
+		[]
+	)
+	for r in records:
+		tbl.add_entry(r)
+	
+	tbl.print_info()
 	
 	
 

@@ -2,7 +2,7 @@
  * @author [Jai Miles]
  * @email [jaimiles23@gmail.com]
  * @create date 2020-10-04 21:51:25
- * @modify date 2020-10-05 16:02:55
+ * @modify date 2020-10-06 00:02:42
  * @desc [
     Contains auxiliary methods for table class.
 
@@ -27,8 +27,9 @@ from custom_objects import Table, Union, Dict, Tuple
 ##########
 # Auxiliary methods for the TableInfo class
 ##########
+
 class TableInfo_AuxMethods():
-    indent = 3 * ' '
+    indent = 3 * ' '        # TODO: Make indent a proportion of the window? e.g., 1 - 0.9 // 10?, so prop to window + final spacing?
     records_key = '#'
     h_line = '-'
 
@@ -49,11 +50,10 @@ class TableInfo_AuxMethods():
     # Width Methods
     ##########
     def set_width_attrs(self,) -> None:
-        """Calls Width methods to set width attributes in class.
-        """
+        """Calls Width methods to set width attributes in class."""
         self.add_records_col_width()
-        self.set_total_col_space()
-        self.set_total_tbl_width()
+        self.set_width_cols_total()
+        self.set_non_col_space()
         self.set_final_colwidths_dict()
 
     def add_records_col_width(self) -> None:
@@ -62,17 +62,16 @@ class TableInfo_AuxMethods():
         widths[self.records_key] = len(str(self.records))
         self.width_per_col = widths
 
-    def set_total_col_space(self) -> None:
+    def set_width_cols_total(self) -> None:
         """Sets total column space used."""
         self.width_cols_total = sum(self.width_per_col.values())
     
-    def set_total_tbl_width(self) -> None:
+    def set_non_col_space(self) -> None:
         """Sets the total table width."""
-        non_col_space = (       # Don't include end columns
+        self.non_col_space = (       # Don't include end columns
             (self.num_cols * 2 - 2) * self.num_spaces + 
             (self.num_cols - 2) * len(self.col_sep)
         )
-        self.width_tbl_total = self.width_cols_total + non_col_space
 
 
     def set_final_colwidths_dict(self) -> dict:
@@ -82,54 +81,60 @@ class TableInfo_AuxMethods():
             dict: {col_name: width}
         
         Aux functions:
-            - get_width(): returns space used for table or columns
             - get_col_prop_width(): returns proportion for each column
+            - pad_col_prop_width(): pads proportional width for each column
         """
-
         def get_col_prop_width(col_width: int, allowed_width: int) -> int:
-            """Returns new column width for table. Proprortionate to longest entry."""
-            EXTRA_WIDTH_ALLOWANCE = 1.5
-            if col_width < (allowed_width // (self.num_cols * EXTRA_WIDTH_ALLOWANCE)):
+            """Returns new column width for table. Proprortionate to longest entry.
+            
+            Note:
+                - Cannot just use the columns proportion of the table, because single digit columns
+                will receive too small of a width. Instead, must pad columns after.
+            """
+            prop_width = int(allowed_width // (self.num_cols))
+            # print(col_width, tbl_prop, prop_width)
+            
+            if col_width < prop_width:
                 return col_width
-            return int((col_width / self.width_tbl_total) * allowed_width)
-        
-        
+            return prop_width
+
+        def pad_col_prop_width(prop_col_width: dict, allowed_width: int) -> dict:
+            """Pads the proportional width of columns that are shorter than max length.
+            
+            1. Get extra padding & Columns to pad
+            2. Get proportion of padding per column
+            3. Add proportion of extra padding to each column.
+            """
+            extra_padding = allowed_width - (sum(prop_col_width[k] for k in self.tbl_keys))
+            cols_to_pad = [k for k in self.tbl_keys if prop_col_width[k] < self.width_per_col[k]]
+
+            tot_pad_needed = sum((self.width_per_col[k] for k in cols_to_pad))
+            for k in cols_to_pad:
+                prop_extra_padding = (self.width_per_col[k] / tot_pad_needed) * extra_padding
+                prop_col_width[k] += int(prop_extra_padding)
+
+            return prop_col_width
+
+
         ## get_col_width_dict(tbl_info)
-        allowed_width = int(os.get_terminal_size().columns * ALLOWED_TERM_WIDTH)
-        if self.width_tbl_total <= allowed_width:
+        allowed_width = os.get_terminal_size().columns * ALLOWED_TERM_WIDTH
+
+        ## TODO: TEST WITH MULTIPLE LONG COLUMNS, THEN DELETE PRINT
+        print(allowed_width, self.width_cols_total)
+        if self.width_cols_total + self.non_col_space <= allowed_width:
            return
         
         ## Get proportional column widths
         prop_col_width = {k : get_col_prop_width(v, allowed_width) for k, v in self.width_per_col.items()}
+        print(prop_col_width)
+        prop_col_width = pad_col_prop_width(prop_col_width, allowed_width)
+        print(prop_col_width)
+        
+        print(sum(prop_col_width[k] for k in self.tbl_keys))
         self.width_per_col = prop_col_width
+
         return
-        
-        
-    ##########
-    # Row Height
-    ##########
-    # def set_row_heights(self) -> dict:
-    #     """Returns dictionary of maximum height required for each row.
 
-    #     Args:
-    #         col_widths (dict): dict of column widths 
-
-    #     Returns:
-    #         dict: [description]
-    #     """
-    #     def get_max_row_height(row: int) -> int:
-    #         """Returns max height required for each row."""
-    #         max_height = 1
-    #         for k in self.keys:
-    #             cell_len, col_len = len(str(getattr(self, k)[row])), self.width_per_col[k]
-    #             row_col_height = math.ceil(cell_len / col_len)
-
-    #             if row_col_height > max_height:
-    #                 max_height = row_col_height
-    #         return max_height
-
-    #     self.row_heights = {r: get_max_row_height(r) for r in range(self.records)}
-    
 
     ##########
     # Printing
@@ -137,7 +142,7 @@ class TableInfo_AuxMethods():
     def c_print(self, *args) -> None:
         """Custom print w/ no separation/end chars.
         """
-        print(*args, sep = '', end = '')
+        print(*args, sep = '', end = '', flush=True)
     
 
     def print_col_delim(self) -> None:
@@ -228,7 +233,10 @@ class TableInfo_AuxMethods():
                 if row_records[k][r] == -1:
                     indent = True if k == self.records_key else False
                     self.print_cell('', k, indent= indent)
-                    self.print_col_delim()
+                    if k == self.tbl_keys[-1]:
+                        print()
+                    else:
+                        self.print_col_delim()
                     continue
                 
                 ## Print val & Spaces
@@ -238,10 +246,11 @@ class TableInfo_AuxMethods():
                 indent = True if k == self.records_key else False
                 self.print_cell(val, k, left, indent)
 
-                if k != self.tbl_keys[-1]:
-                    self.print_col_delim()
-                else:
+                if k == self.tbl_keys[-1]:
                     print()
+                else:
+                    self.print_col_delim()
+                    
 
                 ## Check finished printing
                 if upp == len(row_records[k][v]):

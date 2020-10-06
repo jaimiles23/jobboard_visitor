@@ -9,6 +9,7 @@
  ]
  */
  """
+ 
 ##########
 # Initialize table
 ##########
@@ -25,7 +26,7 @@ from custom_objects import Any, Iterator, Table, Union, UserDefinedClass
 
 class TableInfo(TableInfo_AuxMethods):
 	"""Custom object to store user information"""
-
+	
 	##########
 	# Init
 	##########
