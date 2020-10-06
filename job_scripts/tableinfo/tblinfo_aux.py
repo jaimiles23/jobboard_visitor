@@ -6,8 +6,9 @@
  * @desc [
     Contains auxiliary methods for table class.
 
-    NOTE: Will need to add other length counting methods for stri/dicts. 
-    May like to create self.c_len() methods for such
+    NOTE: 
+    - Will need to add other length counting methods for stri/dicts. 
+    - May like to create self.c_len() methods for such
 
     NOTE: integrate aligned list when passing initial keys. cntrl search "left".
  ]
@@ -20,8 +21,7 @@
 
 import os
 import math
-from constants import ALLOWED_TERM_WIDTH
-from custom_objects import Table, Union, Dict, Tuple
+from script_objects import Table, Union, Dict, Tuple
 
 
 ##########
@@ -29,6 +29,7 @@ from custom_objects import Table, Union, Dict, Tuple
 ##########
 
 class TableInfo_AuxMethods():
+    ALLOWED_TERM_WIDTH = 0.70
     indent = 3 * ' '        # TODO: Make indent a proportion of the window? e.g., 1 - 0.9 // 10?, so prop to window + final spacing?
     records_key = '#'
     h_line = '-'
@@ -117,7 +118,7 @@ class TableInfo_AuxMethods():
 
 
         ## get_col_width_dict(tbl_info)
-        allowed_width = os.get_terminal_size().columns * ALLOWED_TERM_WIDTH
+        allowed_width = os.get_terminal_size().columns * self.ALLOWED_TERM_WIDTH
 
         ## TODO: TEST WITH MULTIPLE LONG COLUMNS, THEN DELETE PRINT
         print(allowed_width, self.width_cols_total)

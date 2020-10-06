@@ -14,10 +14,9 @@
 # Initialize table
 ##########
 
-from aux_methods import TableInfo_AuxMethods
-from constants import WARN_ATTR, WARN_KEYS, WARN_LEN, WARN_STACK
+from tblinfo_aux import TableInfo_AuxMethods
 from custom_errors import TblEntryWarning
-from custom_objects import Any, Iterator, Table, Union, UserDefinedClass
+from script_objects import Any, Iterator, Table, Union, UserDefinedClass
 
 
 ##########
@@ -104,17 +103,17 @@ class TableInfo(TableInfo_AuxMethods):
 		if user_object:
 			entry_dict = convert_class_to_dict(entry)
 			if None in entry_dict.values():
-				flag_show_warning, warn_type = True, WARN_ATTR
+				flag_show_warning, warn_type = True, TblEntryWarning.WARN_ATTR
 
 		elif isinstance(entry, (list, tuple)):
 			entry_dict = convert_iter_to_dict(entry)
 			if len(entry) != len(self.keys):
-				flag_show_warning, warn_type = True, WARN_LEN
+				flag_show_warning, warn_type = True, TblEntryWarning.WARN_STACK
 
 		elif isinstance(entry, dict):
 			entry_dict = entry
 			if entry.keys() != self.keys:
-				flag_show_warning, warn_type = True, WARN_KEYS
+				flag_show_warning, warn_type = True, TblEntryWarning.WARN_KEYS
 		
 
 		## Add info to Table.

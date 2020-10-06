@@ -16,17 +16,24 @@
 import warnings
 from dataclasses import dataclass
 
-from constants import WARN_ATTR, WARN_KEYS, WARN_LEN, WARN_STACK
-from custom_objects import Any, Iterator, Union, UserDefinedClass
+from script_objects import Any, Iterator, Union, UserDefinedClass
 
 
 ##########
 # Warnings
 ##########
-
 @dataclass
 class TblEntryWarning(UserWarning):
 	"""Class to show warnings about table entries."""
+	## Warning info
+	WARN_STACK = 2
+
+	## Warning keys
+	WARN_LEN = 'length'
+	WARN_KEYS = 'keys'
+	WARN_ATTR = 'class_attr'
+
+	## Messages
 	MSG_ITERATOR = "Iterator length did not match Table fields."
 	MSG_CLASS = "Class Attributes did not contain all Table fields."
 	MSG_DICT = "Dictionary did not contain all Table fields."
@@ -43,13 +50,12 @@ class TblEntryWarning(UserWarning):
 	warn_type: str
 	entry: Union[dict, Iterator[Any], UserDefinedClass]
 	show_values: bool = False
-	stack: int = WARN_STACK
 
 	def __post_init__(self):
 		warn_dict = {
-			WARN_LEN		:	self.MSG_ITERATOR,
-			WARN_KEYS		:	self.MSG_CLASS,
-			WARN_ATTR		:	self.MSG_DICT,
+			self.WARN_LEN		:	self.MSG_ITERATOR,
+			self.WARN_KEYS		:	self.MSG_CLASS,
+			self.WARN_ATTR		:	self.MSG_DICT,
 		}
 		self.msg = warn_dict[self.warn_type]
 		
