@@ -85,7 +85,7 @@ class TableInfo(TableInfo_AuxMethods):
 		Auxiliary methods:
 			- convert_class_to_dict(): converts class to dict
 			- convert_iter_to_dict(): convert iter to dict
-		"""		
+		"""
 		def convert_class_to_dict(entry: UserDefinedClass) -> dict:
 			attr_dict = {}
 			for k in self.keys:
@@ -122,7 +122,7 @@ class TableInfo(TableInfo_AuxMethods):
 			entry_dict = entry
 			if entry.keys() != self.keys:
 				flag_show_warning, warn_type = True, WARN_KEYS
-
+		
 		## Add attribute info
 		for k in self.keys:
 			val = entry_dict.get(k, None)
@@ -186,7 +186,7 @@ class TableInfo(TableInfo_AuxMethods):
 			column_alignment (Union[dict, None], optional): colname: (l,r,c) alignment. Defaults to None.
 		
 		Note:
-			- Uses auxiliary methods in "aux_methods" module.
+			- All methods used are stored in the Auxiliary methods module.
 		"""
 		## Table characters
 		self.num_spaces = num_spaces
@@ -197,5 +197,7 @@ class TableInfo(TableInfo_AuxMethods):
 		self.set_row_heights()
 
 		self.print_headers()
+		self.print_horizontal_line()
+		self.print_records()
 
 

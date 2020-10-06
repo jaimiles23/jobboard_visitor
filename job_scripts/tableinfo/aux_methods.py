@@ -27,6 +27,7 @@ from custom_objects import Table, Union
 ##########
 class TableInfo_AuxMethods():
     records_key = '#'
+    h_line = '-'
 
     def __init__(self):
         self.records = 0
@@ -125,7 +126,7 @@ class TableInfo_AuxMethods():
 
         self.row_heights = {r: get_max_row_height(r) for r in range(self.records)}
     
-    
+
     ##########
     # Printing
     ##########
@@ -157,35 +158,56 @@ class TableInfo_AuxMethods():
             self.fill_space(header, key)
 
             if i == len(self.tbl_keys) - 1:
-                self.fill_space(header, key, newline=True)
+                print()
             else:
                 self.print_col_delim()
 
         return
     
-    def print_row(self) -> None:
+    def print_horizontal_line(self) -> None:
         """Prints horizontal lines on the table."""
+        for i in range(len(self.tbl_keys)):
+            col_width = self.width_per_col[ self.tbl_keys[i]]
 
-        
+            self.c_print( self.h_line * col_width)
+
+            if i == len(self.tbl_keys) - 1:
+                print()
+            else:
+                self.print_col_delim()
+    
+    def print_records(self) -> None:
+        """Prints table records for table."""
+        for i in range(self.records):
+            for j in range(len(self.tbl_keys)):
+                key = self.tbl_keys[j]
+
+                if key == self.records_key:
+                   val = i + 1
+                else:
+                    val = getattr(self, key)[i]
+                
+                self.c_print(val)
+                self.fill_space(val, key)
+
+                if j == len(self.tbl_keys) - 1:
+                    print()
+                else:
+                    self.print_col_delim()
+        return
+
 
     ##########
     # Spacing
     ##########
-    def fill_space(self, value: Union[int, str], col: str, newline: bool = False) -> None:
+    def fill_space(self, value: Union[int, str], col: str) -> None:
         """Prints space to fill column according to value length and column length.
 
         Args:
             value (Union[int, str]): int or string
             col (str): key to length of widths_per_col
-            newline (bool): indicates if should show new line.
         """
         col_len = self.width_per_col[col]
         fill_space = col_len - len(str(value))
         self.c_print(' ' * fill_space)
-        if newline: print()
-    
-
-
-
-
-
+        return
