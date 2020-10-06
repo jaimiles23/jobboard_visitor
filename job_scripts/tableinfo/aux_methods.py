@@ -2,9 +2,12 @@
  * @author [Jai Miles]
  * @email [jaimiles23@gmail.com]
  * @create date 2020-10-04 21:51:25
- * @modify date 2020-10-04 21:51:25
+ * @modify date 2020-10-05 16:02:55
  * @desc [
     Contains auxiliary methods for table class.
+
+    NOTE: Will need to add other length counting methods for stri/dicts. 
+    May like to create self.c_len() methods for such
  ]
  */
 """
@@ -14,78 +17,62 @@
 ##########
 
 import os
+import math
 from constants import ALLOWED_TERM_WIDTH
-from custom_objects import Table
+from custom_objects import Table, Union
 
 
 ##########
 # Auxiliary methods for the TableInfo class
 ##########
 class TableInfo_AuxMethods():
+    records_key = '#'
+
     def __init__(self):
         self.records = 0
         self.keys = []
         self.num_cols = len(self.keys) + 1   # records column
         self.width_per_col = {}
-        
+
+        self.col_sep = '|'
+        self.num_spaces = 3
+
 
     ##########
     # Width Methods
     ##########
+    def set_width_attrs(self,) -> None:
+        """Calls Width methods to set width attributes in class.
+        """
+        self.add_records_col_width()
+        self.set_total_col_space()
+        self.set_total_tbl_width()
+        self.set_final_colwidths_dict()
+
+    def add_records_col_width(self) -> None:
+        """Adds records column width to self._width_per_col"""
+        print(self.width_per_col)
+        widths = self.width_per_col
+        widths[self.records_key] = len(str(self.records))
+        print(widths)
+        self.width_per_col = widths
+        print(self.width_per_col)
+
     def set_total_col_space(self) -> None:
         """Sets total column space used."""
         self.width_cols_total = sum(self.width_per_col.values())
     
-    def set_total_tbl_width(
-        self,
-        num_spaces: int,
-        col_sep: str,
-    ) -> None:
-        """Sets the total table width.
-
-        Args:
-            num_spaces (int): number of spaces b/w tbl sep
-            col_sep (str): char to separate columns
-        """
-        non_col_space = (       # Don't include end columns.
-            (self.num_cols * 2 - 2) * num_spaces + 
-            (self.num_cols - 2) * len(col_sep)
+    def set_total_tbl_width(self) -> None:
+        """Sets the total table width."""
+        non_col_space = (       # Don't include end columns
+            (self.num_cols * 2 - 2) * self.num_spaces + 
+            (self.num_cols - 2) * len(self.col_sep)
         )
-        self.width_tbl_total
-
-    def get_width(
-        self, 
-        num_spaces: int, 
-        col_sep: str,
-        total_table: bool = False,
-        ) -> int:
-        """Returns int representing the width of either the (total table, or the sum of columns)
-
-        Args:
-            num_spaces (int): Number of spaces b/w column chars
-            col_sep (str): Character separating columns.
-            table (bool, optional): Specify return length of entire table. Otherwise, returns length of columns.
-
-        Returns:
-            int: Length of table or columns.
-        """
-        non_col_space = (       # Don't include end columns.
-            (self.num_cols * 2 - 2) * num_spaces + 
-            (self.num_cols - 2) * len(col_sep)
-        )
-        return total_col_space + non_col_space
+        self.width_tbl_total = self.width_cols_total + non_col_space
 
 
-    def get_col_widths_dict(
-        self,
-        num_spaces: int,
-        col_sep: str
-        ) -> dict:
+    def set_final_colwidths_dict(self) -> dict:
         """Returns dictionary with width for each columns
-        
-        Args:
-            num_spaces (int): Number of spaces between each column separator
-            col_sep (str): Character to separate columns
 
         Returns:
             dict: {col_name: width}
@@ -95,30 +82,29 @@ class TableInfo_AuxMethods():
             - get_col_prop_width(): returns proportion for each column
         """
 
-        def get_col_prop_width(col_width: int) -> int:
+        def get_col_prop_width(col_width: int, allowed_width: int) -> int:
             """Returns new column width for table. Proprortionate to longest entry."""
             EXTRA_WIDTH_ALLOWANCE = 1.5
-            if col_width < (allowed_col_width // (self.num_cols * EXTRA_WIDTH_ALLOWANCE)):
+            if col_width < (allowed_width // (self.num_cols * EXTRA_WIDTH_ALLOWANCE)):
                 return col_width
-            return int((col_width / tbl_width) * allowed_col_width)
+            return int((col_width / self.width_tbl_total) * allowed_width)
         
         
         ## get_col_width_dict(tbl_info)
         allowed_width = int(os.get_terminal_size().columns * ALLOWED_TERM_WIDTH)
-        tbl_width = self.get_width(num_spaces, col_sep, total_table=True)
-        if tbl_width <= allowed_width:
-            return self.width_per_col
+        if self.width_tbl_total <= allowed_width:
+           return
         
         ## Get proportional column widths
-        allowed_col_width = self.get_width(num_spaces, col_sep, total_table=False)
-        prop_col_width = {k : get_col_prop_width(v) for k, v in self.width_per_col.items()}
-        return prop_col_width
+        prop_col_width = {k : get_col_prop_width(v, allowed_width) for k, v in self.width_per_col.items()}
+        self.width_per_col = prop_col_width
+        return
         
         
     ##########
     # Row Height
     ##########
-    def get_row_heights(self, col_widths: dict) -> dict:
+    def set_row_heights(self) -> dict:
         """Returns dictionary of maximum height required for each row.
 
         Args:
@@ -130,14 +116,70 @@ class TableInfo_AuxMethods():
         def get_max_row_height(row: int) -> int:
             """Returns max height required for each row."""
             max_height = 1
-            for k in tbl_info.keys():
-                row_col_len = len(str(tbl_info[k][row]))
-                col_len = col_widths[k]
+            for k in self.keys:
+                cell_len, col_len = len(str(getattr(self, k)[row])), self.width_per_col[k]
+                row_col_height = math.ceil(cell_len / col_len)
 
-                row_col_height = math.ceil(row_col_len/col_len)
                 if row_col_height > max_height:
                     max_height = row_col_height
             return max_height
 
-        print(tbl_info[TBL_RECORD_KEY])
-        return {r: get_max_row_height(r) for r in tbl_info[TBL_RECORD_KEY]}
+        self.row_heights = {r: get_max_row_height(r) for r in range(self.records)}
+    
+
+    ##########
+    # Printing
+    ##########
+    def c_print(self, *args) -> None:
+        """Custom print w/ no separation/end chars.
+        """
+        print(*args, sep = '', end = '')
+    
+    def print_col_delim(self) -> None:
+        """Prints column delimiters: num_spaces, col_sep, num_spaces
+        
+        If no col_sep, prints num_spaces.
+        """
+        if self.col_sep != '':
+            self.c_print(self.num_spaces * ' ', self.col_sep, self.num_spaces * ' ')
+        else:
+            self.c_print(self.num_spaces)
+    
+    def print_headers(self, custom_func: object = None) -> None:
+        """Prints headers. Can pass custom function to call on headers
+
+        Args:
+            custom_func (object, optional): Func to format headers. Defaults to None.
+        """
+        for h in ([self.records_key] + self.keys[:-1]):
+            header = custom_func(h) if custom_func else h
+            print(header, self.fill_space(h, h))
+            self.print_col_delim()
+        
+        last_col = self.keys[-1]
+        header = custom_func(last_col) if custom_func else last_col
+        self.c_print(header, self.fill_space(last_col, last_col, newline=True))
+        return
+        
+
+    ##########
+    # Spacing
+    ##########
+    def fill_space(self, value: Union[int, str], col: str, newline: bool = False) -> None:
+        """Prints space to fill column according to value length and column length.
+
+        Args:
+            value (Union[int, str]): int or string
+            col (str): key to length of widths_per_col
+            newline (bool): indicates if should show new line.
+        """
+        col_len = self.width_per_col[col]
+        fill_space = col_len - len(str(value))
+        self.c_print(' ' * fill_space)
+        if newline: print()
+    
+
+
+
+
+

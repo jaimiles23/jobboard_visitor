@@ -44,10 +44,16 @@ class TableInfo(TableInfo_AuxMethods):
 		if not isinstance(tbl_keys, dict) and not hasattr(tbl_keys, '__iter__'):
 			raise Exception("Initialization TableInfo must be type: List, Tuple, or Dictionary.")
 		tbl_keys = tbl_keys if hasattr(tbl_keys, '__iter__') else list(tbl_keys.keys())
-		
+		# tbl_keys += [self.records_key]
+
 		self.records = 0
 		self.keys = tbl_keys
+
+		## Printing info
+		self.num_cols = len(self.keys) + 1   # records column
 		self.width_per_col = {k:0 for k in tbl_keys}
+		self.col_sep = '|'
+		self.num_spaces = 3
 
 		for k in self.keys:
 			setattr(self, k, list())
@@ -60,6 +66,7 @@ class TableInfo(TableInfo_AuxMethods):
 	def add_entry(
 		self,
 		entry: Union[dict, Iterator[Any], UserDefinedClass],
+		user_object: bool = False,
 		show_warning: bool = True,
 		show_warn_vals: bool = False
 	) -> None:
@@ -67,6 +74,7 @@ class TableInfo(TableInfo_AuxMethods):
 
 		Args:
 			entry (Union[dict, Iterator[Any], UserDefinedClass]): Info to add to table.
+			user_object (bool, optional): Indicates if adding user_object. Defaults to False.
 			show_warning (bool, optional): Show warnings when adding entry. Defaults to True.
 			show_warn_vals (bool, optional): Show value assignments in warning. Defaults to False.
 
@@ -74,13 +82,9 @@ class TableInfo(TableInfo_AuxMethods):
 			Table: Table dictionary with updated entry.
 		
 		Auxiliary methods:
-			- is_userdefinedclass(): returns boolean if object is a user defined class.
 			- convert_class_to_dict(): converts class to dict
 			- convert_iter_to_dict(): convert iter to dict
-		"""
-		def is_userdefinedclass(cls):
-			return str(cls).startswith('<class ')
-		
+		"""		
 		def convert_class_to_dict(entry: UserDefinedClass) -> dict:
 			attr_dict = {}
 			for k in self.keys:
@@ -92,7 +96,8 @@ class TableInfo(TableInfo_AuxMethods):
 		def convert_iter_to_dict(entry: Iterator) -> dict:
 			iter_dict = {}
 			for i in range(len(self.keys)):
-				val = entry[i] if i < len(entry) else None
+				if i < len(entry):	val = entry[i] 
+				else:				val = None
 				iter_dict[self.keys[i]] = val
 			return iter_dict
 
@@ -101,13 +106,13 @@ class TableInfo(TableInfo_AuxMethods):
 		flag_show_warning, warn_type = False, None
 		
 		## Convert user defined object to dict
-		if is_userdefinedclass(entry):
+		if user_object:
 			entry_dict = convert_class_to_dict(entry)
-			if None in entry.values():
+			if None in entry_dict.values():
 				flag_show_warning, warn_type = True, WARN_ATTR
 		
 		## Convert Iterable to dict
-		elif hasattr(entry, '__iter__'):
+		elif isinstance(entry, (list, tuple)):
 			entry_dict = convert_iter_to_dict(entry)
 			if len(entry) != len(self.keys):
 				flag_show_warning, warn_type = True, WARN_LEN
@@ -142,20 +147,20 @@ class TableInfo(TableInfo_AuxMethods):
 		"""
 		for k in self.keys:
 			val = entry_dict.get(k, 0)
-			val = val if val else 0
-			if val > self.width_per_col[k]:
-				self.width_per_col[k] = val
+			if len(str(val)) > self.width_per_col[k]:
+				self.width_per_col[k] = len(str(val))
 		return None
 	
 
-	def add_entries(self, entries: Iterator) -> None:
+	def add_entries(self, entries: Iterator, user_objects: bool = False) -> None:
 		"""Calls add_entry() method on list.
 
 		Args:
 			entries (Iterator): Iterable of entries to add.
+			user_objects (bool, optional): Indicates if entries are user defined objects. Defaults to False.
 		"""
 		for entry in entries:
-			self.add_entry(entry)
+			self.add_entry(entry, user_object= user_objects)
 		return None
 
 
@@ -184,28 +189,13 @@ class TableInfo(TableInfo_AuxMethods):
 		Note:
 			- Uses auxiliary methods in "aux_methods" module.
 		"""
+		## Table characters
 		col_sep = col_sep if v_lines else ''
-		col_widths: dict = self.get_col_widths_dict(num_spaces, col_sep)
-	
+		self.col_sep = col_sep
+		self.num_spaces = num_spaces
 
+		## Table Widths & Heights
+		self.set_width_attrs()
+		self.set_row_heights()
 
-
-
-
-##########
-# Test
-##########
-
-keys = ['a', 'b']
-tbl = TableInfo(keys)
-print(tbl.__dict__)
-tbl.add_entry([1,2])
-print(tbl.a, tbl.b)
-tbl.add_entry([3,5])
-print(tbl.a, tbl.b)
-
-add = [{'a':1, 'b':8}, {'a':2, 'b':20}]
-tbl.add_entries(add)
-print(tbl.a, tbl.b)
-print(tbl.width_per_col)
-
+		self.print_headers()
