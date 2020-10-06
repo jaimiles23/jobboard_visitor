@@ -24,17 +24,20 @@
 ##########
 # Imports
 ##########
-
 import os
 import math
-from script_objects import Table, Union, Dict, Tuple
 
+try:
+    from script_objects import Union, Tuple
+
+except ModuleNotFoundError:
+    from .script_objects import Union, Tuple
 
 ##########
 # Auxiliary methods for the TableInfo class
 ##########
 
-class TableInfo_AuxMethods():
+class Aux_TblInfo():
     """Contains aux methods & constants for the TblInfo class."""
     ALLOWED_TERM_WIDTH = 0.70
     indent = int((1 - ALLOWED_TERM_WIDTH) * 10)

@@ -14,16 +14,20 @@
 # Initialize table
 ##########
 
-from tblinfo_aux import TableInfo_AuxMethods
-from custom_errors import TblEntryWarning
-from script_objects import Any, Iterator, Table, Union, UserDefinedClass
-
+try:
+	from tblinfo_aux import Aux_TblInfo
+	from custom_errors import TblEntryWarning
+	from script_objects import Any, Iterator, Table, Union, UserDefinedClass
+except ModuleNotFoundError:
+	from .tblinfo_aux import Aux_TblInfo
+	from .custom_errors import TblEntryWarning
+	from .script_objects import Any, Iterator, Table, Union, UserDefinedClass
 
 ##########
 # TableInfo Class
 ##########
 
-class TableInfo(TableInfo_AuxMethods):
+class TableInfo(Aux_TblInfo):
 	"""Custom object to store user information"""
 	
 	##########

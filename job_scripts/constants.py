@@ -17,7 +17,7 @@ SHEETNAMES = (
 	"job_sites",
 	"country",
 	"state",
-	"city"
+	"city",
 )
 
 DELIMITER_LOC = ','

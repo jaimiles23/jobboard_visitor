@@ -5,6 +5,9 @@
  * @modify date 2020-10-03 19:49:18
  * @desc [
     Contains job site class to contain job information
+
+    TODO:
+    - Consider making jobsite class methods inherited from an aux object.
  ]
  */
 """
@@ -36,6 +39,17 @@ class JobSite(object):
     max_sites_opened = constants.MAX_SITES_OPENED
     sites_opened = 0
     flag_can_open = True
+
+    print_attr = (
+        'ident',
+        'name',
+        ## ADD ALL OF THESE BELOW
+        'flag_opened',
+        'sites',
+        'queue_index',
+        'queue_priority',
+        'searched_queue',
+    )
 
 
     @classmethod
@@ -196,7 +210,6 @@ class JobSite(object):
     ##########
     # Instance methods
     ##########
-
     def get_queue_index(self) -> int:
         """Returns index of jobsite instance in queue. If not in queue, adds to end.
 
@@ -222,7 +235,7 @@ class JobSite(object):
         return index
 
 
-    def check_open(self) -> bool:
+    def set_flag_open(self) -> bool:
         """Returns self.flag_open to determine if url should be opened.
         """
         flag_open = (
@@ -231,8 +244,7 @@ class JobSite(object):
         )
         if flag_open:
             JobSite.sites_opened += 1
-            
-        return flag_open
+        self.flag_open = flag_open
     
 
     def open_websites(self) -> None:
@@ -248,12 +260,13 @@ class JobSite(object):
             return None
         
         for url in self.urls:
-            flag_open = self.check_open()
-            self.print_queue_info(flag_open)
-            if flag_open:
-                webbrowser.open(url)
+            self.set_flag_open()
+            self.print_queue_info(self.flag_open)
+            if self.flag_open:
+                pass
+                # webbrowser.open(url)
             
-        if flag_open:
+        if self.flag_open:
             JobSite.used_jobsites.append( (self.queue_index, self.ident))
         return None
     

@@ -19,6 +19,7 @@ from .constants import (COL_CITY, COL_COUNTRY, COL_DESCRIPT, COL_ID,
 from .jobsite_class import JobSite
 from .script_objects import All_JobSites, DataFrame
 
+
 ##########
 # Create instances
 ##########

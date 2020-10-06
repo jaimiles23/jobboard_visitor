@@ -16,8 +16,10 @@
 import warnings
 from dataclasses import dataclass
 
-from script_objects import Any, Iterator, Union, UserDefinedClass
-
+try:
+	from script_objects import Any, Iterator, Union, UserDefinedClass
+except:
+	from .script_objects import Any, Iterator, Union, UserDefinedClass
 
 ##########
 # Warnings

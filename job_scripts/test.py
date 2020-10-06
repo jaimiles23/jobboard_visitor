@@ -5,6 +5,9 @@
  * @modify date 2020-09-30 21:25:09
  * @desc [
     Contains job site class to contain job information
+
+    NOTE:
+    - Believe that I can delete this -- Come back after testing rest of files!
  ]
  */
 """

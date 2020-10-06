@@ -5,6 +5,9 @@
  * @modify date 2020-10-02 16:58:38
  * @desc [
     Script to get string location data from data frame.
+
+TODO:
+	 - module this better. It's confusing as is.
  ]
  */
 """
@@ -59,7 +62,6 @@ def get_str_locations(df_jobsites: DataFrame, df_location_keys: DataFrames) -> D
 		Auxiliary function:
 			get_int_list(): Returns List[int] from List[str].
 		"""
-
 		def get_int_list(
 			location_values: str, 
 			DELIMITER_LOC: str,

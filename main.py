@@ -22,6 +22,7 @@ from job_scripts import (constants, custom_errors, df_methods,
                          jobsite_instances, locations)
 from job_scripts.jobs_queue import JobQueue
 from job_scripts.jobsite_class import JobSite
+from job_scripts.tableinfo import TableInfo
 
 
 ##########
@@ -53,6 +54,8 @@ def main():
 
     ## 3
     print(header, steps[3])
+
+    
     JobSite.clean_queue(all_jobsites)
     for jobsite in all_jobsites:
         jobsite.open_websites()
