@@ -48,7 +48,7 @@ class TableInfo(TableInfo_AuxMethods):
 
 		self.records = 0
 		self.keys = tbl_keys
-		self.all_keys = [self.records_key] + tbl_keys
+		self.tbl_keys = [self.records_key] + tbl_keys
 
 		## Printing info
 		self.num_cols = len(self.keys) + 1   # records column

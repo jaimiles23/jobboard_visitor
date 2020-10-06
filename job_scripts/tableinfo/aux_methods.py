@@ -32,7 +32,7 @@ class TableInfo_AuxMethods():
         self.records = 0
         self.keys = []
         self.tbl_keys = self.keys + [self.records_key]
-        
+
         self.num_cols = len(self.keys) + 1   # records column
         self.width_per_col = {}
 
@@ -125,7 +125,7 @@ class TableInfo_AuxMethods():
 
         self.row_heights = {r: get_max_row_height(r) for r in range(self.records)}
     
-
+    
     ##########
     # Printing
     ##########
@@ -150,16 +150,17 @@ class TableInfo_AuxMethods():
         Args:
             custom_func (object, optional): Func to format headers. Defaults to None.
         """
-        for h in ([self.records_key] + self.keys[:-1]):
-            header = custom_func(h) if custom_func else h
+        for i in range(len(self.tbl_keys)):
+            key = self.tbl_keys[i]
+            header = custom_func(key) if custom_func else key
             self.c_print(header)
-            self.fill_space(header, h)
-            self.print_col_delim()
-        
-        last_col = self.keys[-1]
-        header = custom_func(last_col) if custom_func else last_col
-        self.c_print(header)
-        self.fill_space(header, last_col, newline=True)
+            self.fill_space(header, key)
+
+            if i == len(self.tbl_keys) - 1:
+                self.fill_space(header, key, newline=True)
+            else:
+                self.print_col_delim()
+
         return
     
     def print_row(self) -> None:
