@@ -41,7 +41,7 @@ def create_jobsite_instances(df: DataFrame) -> All_JobSites:
             name = df[COL_NAME].iloc[i],
             urls = df[COL_URLS].iloc[i],
             description = df[COL_DESCRIPT].iloc[i],
-            queue_priority = df[COL_QUEUE_PRIORITY].iloc[i],
+            Q_priority= df[COL_QUEUE_PRIORITY].iloc[i],
             jobboard = df[COL_JOBBOARD].iloc[i],
             organization = df[COL_JOBBOARD].iloc[i],
             country = df[COL_COUNTRY].iloc[i],

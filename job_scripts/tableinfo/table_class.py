@@ -181,7 +181,8 @@ class TableInfo(Aux_TblInfo):
 		row_sep: str = '-',
 		col_sep: str = '|', 
 		v_lines: bool = True,
-		column_alignment: Union[dict, None] = {}
+		column_alignment: Union[dict, None] = {},
+		new_line: bool = True
 	):
 		"""Prints information stored in the table.
 
@@ -191,11 +192,13 @@ class TableInfo(Aux_TblInfo):
 			col_sep (str, optional): Char to separate cols. Defaults to '|'.
 			v_lines (bool, optional): Print lines b/w columns. Defaults to True	.
 			column_alignment (Union[dict, None], optional): colname: (l,r,c) alignment. Defaults to None.
+			new_line (bool, optional): Print new line before table. Defaults to True.
 		
 		Note:
 			- Print methods used are stored in the Auxiliary methods module.
 		"""
 		## Table characters
+		if new_line: print()
 		self.num_spaces = num_spaces
 		self.col_sep = col_sep if v_lines else ''
 		

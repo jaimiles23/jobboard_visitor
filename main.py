@@ -58,8 +58,8 @@ def main():
     tbl = TableInfo( JobSite.attrs_to_print)
     JobSite.clean_queue(all_jobsites)
     for jobsite in all_jobsites:
-        tbl.add_entry(jobsite, user_object=True)
         jobsite.open_websites()
+        tbl.add_entry(jobsite, user_object=True)
     
     tbl.print_info()
         

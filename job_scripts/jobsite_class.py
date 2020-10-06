@@ -44,10 +44,10 @@ class JobSite(object):
         'ident',
         'name',
         'flag_opened',
-        'sites',
-        'queue_index',
-        'queue_priority',
-        'checked_jobs',
+        'num_sites',
+        'Q_index',
+        # 'Q_priority',
+        # 'checked_jobs_in_Q',
     )
 
     @classmethod
@@ -84,11 +84,6 @@ class JobSite(object):
             - removed calculated w/ set math to change index for O(N) time complexity.
         """
         indices_used = set()
-
-        print(f"{JobSite.jobsite_queue=}")
-        print(f"{JobSite.used_jobsites=}")
-
-
         for index, ident in JobSite.used_jobsites:
             removed = sum(1 if (num < index) else 0 for num in indices_used)
             del JobSite.jobsite_queue[index - removed]
@@ -96,8 +91,6 @@ class JobSite(object):
 
             ## Add to end of list
             JobSite.jobsite_queue.append(ident)
-
-        print(f"{JobSite.jobsite_queue=}")
         return JobSite.jobsite_queue
     
 
@@ -158,7 +151,7 @@ class JobSite(object):
 
         ## update queue indices
         for job in all_jobsites:
-            job.queue_index = job.get_queue_index()
+            job.Q_index = job.get_Q_index()
         print("- Updated queue.")
         return 
 
@@ -173,7 +166,7 @@ class JobSite(object):
         name (str): jobsite name
         urls (List[str]): jobsite urls to open
         description (str): Description of organization
-        queue_priority (int): (1/queue_priority) of queue to search.
+        Q_priority (int): (1/Q_priority) of queue to search.
         jobboard (bool): indicates if jobboard
         organization (bool): indicates if a specific org
         country (str): country location
@@ -185,7 +178,7 @@ class JobSite(object):
     name: str
     urls: List[str]
     description: str
-    queue_priority: int
+    Q_priority: int
     jobboard: bool
     organization: bool
     country: str
@@ -196,22 +189,21 @@ class JobSite(object):
     ## Custom methods
     def __post_init__(self):
         """Called at end of __init__ by dataclass."""
-        self.queue_index = self.get_queue_index()
+        self.Q_index = self.get_Q_index()
 
         ## Init flags
         self.flag_opened = False
-
         if isinstance(self.urls, str):
-            self.sites = 1
+            self.num_sites = 1
         else:
-            self.sites = len(self.urls)
+            self.num_sites = len(self.urls)
         return
 
 
     ##########
     # Instance methods
     ##########
-    def get_queue_index(self) -> int:
+    def get_Q_index(self) -> int:
         """Returns index of jobsite instance in queue. If not in queue, adds to end.
 
         Returns:
@@ -235,9 +227,10 @@ class JobSite(object):
         print(f"- Adding {self.name} ({self.ident}) to job queue at index {index}")
         return index
 
-    def set_checked_jobs(self) -> None:
+
+    def set_checked_jobs_in_Q(self) -> None:
         """sets how many items were checks first in queue for this jobsite."""
-        self.checked_jobs = math.ceil(len( JobSite.jobsite_queue) / self.queue_priority)
+        self.checked_jobs_in_Q = math.ceil(len( JobSite.jobsite_queue) / self.Q_priority)
         return
 
 
@@ -246,11 +239,12 @@ class JobSite(object):
         """
         flag_opened = (
             (JobSite.max_sites_opened > JobSite.sites_opened) and
-            (self.queue_index <= self.checked_jobs)
+            (self.Q_index <= self.checked_jobs_in_Q)
         )
         if flag_opened:
             JobSite.sites_opened += 1
         self.flag_opened = flag_opened
+        return
     
 
     def open_websites(self) -> None:
@@ -258,63 +252,25 @@ class JobSite(object):
         
         Appends tuple of index & id to used_jobsites to change queue later.
         """
+        self.set_checked_jobs_in_Q()
+
         if JobSite.sites_opened == JobSite.max_sites_opened:
             JobSite.print_opened_all_sites()
             return
         elif JobSite.sites_opened + len(self.urls) > JobSite.max_sites_opened:
-            self.print_exceeds_site_count(flag_opened= False)
+            self.checked_jobs_in_Q = "too many sites."
             return
         
-        self.set_checked_jobs()
         self.set_flag_opened()
 
-        for url in self.urls:    
-            self.print_queue_info(self.flag_opened)
-            if self.flag_opened:
-                pass
-
-                # webbrowser.open(url)
+        if self.flag_opened:
+            for url in self.urls: 
+                pass 
+                # webbrowser.open(url)  
+                # self.print_queue_info(self.flag_opened)
             
         if self.flag_opened:
-            JobSite.used_jobsites.append( (self.queue_index, self.ident))
+            JobSite.used_jobsites.append( (self.Q_index, self.ident))
         return None
     
 
-    def print_site_info(self, flag_opened: bool, details: str) -> None:
-        """Prints information about the website, including if opened & details.
-
-        Args:
-            flag_opened (bool): Prints if website was opened.
-            details (str): Extra details to include
-        """
-        opened_dict = {
-            True    :   "opened",
-            False   :   "not opened"
-        }
-        print(f"""- {self.name} ({self.ident}) 
-    {details}
-    status: {opened_dict[flag_opened]}
-    sites opened: {JobSite.sites_opened} / {JobSite.max_sites_opened}""")
-        return None
-        
-
-    def print_exceeds_site_count(self, flag_opened: bool) -> None:
-        """Prints message that number of URLs to open exceeds available webpages.
-
-        Args:
-            flag_opened (bool): if website was opened.
-        """
-        details = f"\t{len(self.urls)} websites - exceeds {JobSite.max_sites_opened} websites."
-        self.print_site_info(flag_opened, details)
-    
-
-    def print_queue_info(self, flag_opened: bool) -> None:
-        """Prints information about whether the site was opened or not.
-
-        Args:
-            flag_opened (bool): if website was opened.
-        """
-        details = f"Q_index: {self.queue_index}, \
-priority_Q: {self.queue_priority}, \
-seached first {math.ceil(len( JobSite.jobsite_queue) / self.queue_priority)}"
-        self.print_site_info(flag_opened, details)
