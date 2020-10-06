@@ -215,7 +215,7 @@ class TableInfo_AuxMethods():
             else:
                 self.print_col_delim()
     
-
+    
     def print_records(self) -> None:
         """Prints table records for table.
         

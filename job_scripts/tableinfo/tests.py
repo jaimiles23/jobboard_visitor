@@ -2,7 +2,7 @@
  * @author [Jai Miles]
  * @email [jaimiles23@gmail.com]
  * @create date 2020-10-04 20:15:35
- * @modify date 2020-10-04 20:15:35
+ * @modify date 2020-10-06 14:29:18
  * @desc [
     Tests for TableInfo: init, adding, & printing
  ]
@@ -28,7 +28,7 @@ def test_init_tbl() -> bool:
 		(
 			['info'], 
 			{'info': [], 'records': 0, 'keys': ['info']}
-			),
+		),
 		(
 			['test', 'info'],
 			{'test': [], 'info': [], 'records': 0, 'keys': ['test', 'info']}

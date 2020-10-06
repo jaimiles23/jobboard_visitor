@@ -9,7 +9,7 @@
  ]
  */
  """
- 
+
 ##########
 # Initialize table
 ##########
@@ -34,25 +34,19 @@ class TableInfo(TableInfo_AuxMethods):
 		"""Initializes TableInfo objects with attributes based on TableInfo keys.
 
 		Args:
-			tbl_keys (Union[dict, Iterator[Any]]): List of attributes to create.
-		
-		NOTE:
-			- In the future, may be interested to explore creating flexible getter/setter
-			methods for string-defined attributes?
-				- This will simplify the code of appending the value to the list,
-				and can include update col_lengths value in this method.
+			tbl_keys (Union[dict, Iterator[Any]]): List of attributes to create
 		"""
-		if not isinstance(tbl_keys, dict) and not hasattr(tbl_keys, '__iter__'):
+		if not hasattr(tbl_keys, '__iter__'):
 			raise Exception("Initialization TableInfo must be type: List, Tuple, or Dictionary.")
 		tbl_keys = tbl_keys if hasattr(tbl_keys, '__iter__') else list(tbl_keys.keys())
-		# tbl_keys += [self.records_key]
 
+		## Record information
 		self.records = 0
 		self.keys = tbl_keys
 		self.tbl_keys = [self.records_key] + tbl_keys
 
-		## Printing info
-		self.num_cols = len(self.keys) + 1   # records column
+		## Info for printing
+		self.num_cols = len(self.keys) + 1   # records col
 		self.width_per_col = {k:0 for k in tbl_keys}
 		self.col_sep = '|'
 		self.num_spaces = 3
@@ -76,12 +70,9 @@ class TableInfo(TableInfo_AuxMethods):
 
 		Args:
 			entry (Union[dict, Iterator[Any], UserDefinedClass]): Info to add to table.
-			user_object (bool, optional): Indicates if adding user_object. Defaults to False.
+			user_object (bool, optional): If entry is user_object. Defaults to False.
 			show_warning (bool, optional): Show warnings when adding entry. Defaults to True.
 			show_warn_vals (bool, optional): Show value assignments in warning. Defaults to False.
-
-		Returns:
-			Table: Table dictionary with updated entry.
 		
 		Auxiliary methods:
 			- convert_class_to_dict(): converts class to dict
@@ -90,9 +81,9 @@ class TableInfo(TableInfo_AuxMethods):
 		def convert_class_to_dict(entry: UserDefinedClass) -> dict:
 			attr_dict = {}
 			for k in self.keys:
-				try: val = getattr(entry, k)
-				except AttributeError: val = None
-				finally: attr_dict[k] = val
+				try: 					val = getattr(entry, k)
+				except AttributeError:	val = None
+				finally:				attr_dict[k] = val
 			return attr_dict
 		
 		def convert_iter_to_dict(entry: Iterator) -> dict:
@@ -104,40 +95,39 @@ class TableInfo(TableInfo_AuxMethods):
 			return iter_dict
 
 
-		##### add_entry main method()
+		##### add_entry parent method()
 		flag_show_warning, warn_type = False, None
 		
-		## Convert user defined object to dict
+		## Make dict type
 		if user_object:
 			entry_dict = convert_class_to_dict(entry)
 			if None in entry_dict.values():
 				flag_show_warning, warn_type = True, WARN_ATTR
-		
-		## Convert Iterable to dict
+
 		elif isinstance(entry, (list, tuple)):
 			entry_dict = convert_iter_to_dict(entry)
 			if len(entry) != len(self.keys):
 				flag_show_warning, warn_type = True, WARN_LEN
-		
+
 		elif isinstance(entry, dict):
 			entry_dict = entry
 			if entry.keys() != self.keys:
 				flag_show_warning, warn_type = True, WARN_KEYS
 		
-		## Add attribute info
+
+		## Add info to Table.
 		for k in self.keys:
 			val = entry_dict.get(k, None)
 			tbl_info = getattr(self, k) + [val]
 			setattr(self, k, tbl_info)
 		
-		# Show any warnings
 		if flag_show_warning:
 			TblEntryWarning(
 				warn_type= warn_type, 
 				entry= entry_dict, 
 				show_values= show_warn_vals)
 		
-		## Wrap-up
+		## Miscellaneous
 		self.records += 1
 		self.update_col_lengths(entry_dict)
 		return None
