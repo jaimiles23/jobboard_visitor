@@ -6,9 +6,9 @@
  * @modify date 2020-10-05 14:58:33
  * @desc [
     Contains TableInfo class. Stores & Prints information.
- ]
- */
- """
+]
+*/
+"""
 
 ##########
 # Initialize table
@@ -39,7 +39,7 @@ class TableInfo(TableInfo_AuxMethods):
 		"""
 		if not hasattr(tbl_keys, '__iter__'):
 			raise Exception("Initialization TableInfo must be type: List, Tuple, or Dictionary.")
-		tbl_keys = tbl_keys if not isinstance(dict, tbl_keys) else list(tbl_keys.keys())
+		tbl_keys = tbl_keys if not isinstance(tbl_keys, dict) else list(tbl_keys.keys())
 
 		## Record information
 		self.records = 0
@@ -108,7 +108,7 @@ class TableInfo(TableInfo_AuxMethods):
 		elif isinstance(entry, (list, tuple)):
 			entry_dict = convert_iter_to_dict(entry)
 			if len(entry) != len(self.keys):
-				flag_show_warning, warn_type = True, TblEntryWarning.WARN_STACK
+				flag_show_warning, warn_type = True, TblEntryWarning.WARN_LEN
 
 		elif isinstance(entry, dict):
 			entry_dict = entry

@@ -2,15 +2,21 @@
  * @author [Jai Miles]
  * @email [jaimiles23@gmail.com]
  * @create date 2020-10-04 21:51:25
- * @modify date 2020-10-06 00:02:42
+ * @modify date 2020-10-06 15:04:05
  * @desc [
     Contains auxiliary methods for table class.
 
-    NOTE: 
+    TODO: 
     - Will need to add other length counting methods for stri/dicts. 
     - May like to create self.c_len() methods for such
+    - Integrate aligned list when passing initial keys. cntrl search "left".
 
-    NOTE: integrate aligned list when passing initial keys. cntrl search "left".
+    TODO:
+    - In the future, create "type" dict for columns. 
+        - If the column is int, then automatically format right?
+        - if column is float, automatically format on decimal
+        - if str, automatically format left.
+        - once this is done, can remove special formatting for the records column (only ints).
  ]
  */
 """
@@ -29,13 +35,15 @@ from script_objects import Table, Union, Dict, Tuple
 ##########
 
 class TableInfo_AuxMethods():
+    """Contains aux methods & constants for the TblInfo class."""
     ALLOWED_TERM_WIDTH = 0.70
-    indent = 3 * ' '        # TODO: Make indent a proportion of the window? e.g., 1 - 0.9 // 10?, so prop to window + final spacing?
+    indent = int((1 - ALLOWED_TERM_WIDTH) * 10)
     records_key = '#'
     h_line = '-'
 
 
     def __init__(self):
+        """Attributes are instantiated in TblInfo() class."""
         self.records = 0
         self.keys = []
         self.tbl_keys = self.keys + [self.records_key]
@@ -117,21 +125,15 @@ class TableInfo_AuxMethods():
             return prop_col_width
 
 
-        ## get_col_width_dict(tbl_info)
+        ## get_col_width_dict() parent
         allowed_width = os.get_terminal_size().columns * self.ALLOWED_TERM_WIDTH
-
-        ## TODO: TEST WITH MULTIPLE LONG COLUMNS, THEN DELETE PRINT
-        print(allowed_width, self.width_cols_total)
         if self.width_cols_total + self.non_col_space <= allowed_width:
            return
         
         ## Get proportional column widths
         prop_col_width = {k : get_col_prop_width(v, allowed_width) for k, v in self.width_per_col.items()}
-        print(prop_col_width)
         prop_col_width = pad_col_prop_width(prop_col_width, allowed_width)
-        print(prop_col_width)
-        
-        print(sum(prop_col_width[k] for k in self.tbl_keys))
+
         self.width_per_col = prop_col_width
 
         return
@@ -141,22 +143,18 @@ class TableInfo_AuxMethods():
     # Printing
     ##########
     def c_print(self, *args) -> None:
-        """Custom print w/ no separation/end chars.
-        """
-        print(*args, sep = '', end = '', flush=True)
+        """Custom print w/ no separation/end chars."""
+        print(*args, sep = '', end = '')
     
-
     def print_col_delim(self) -> None:
         """Prints column delimiters: num_spaces, col_sep, num_spaces
         
-        If no col_sep, prints num_spaces.
-        """
+        If no col_sep, prints num_spaces."""
         if len(self.col_sep) == 0:
             self.c_print(self.num_spaces) * ' '
         else:
             self.c_print(self.num_spaces * ' ', self.col_sep, self.num_spaces * ' ')
     
-
     def print_cell(self, val: str, col: str, left: bool = True, indent: bool = False):
         """Print cell contents
 
@@ -178,7 +176,7 @@ class TableInfo_AuxMethods():
 
     def print_indent(self):
         """Prints table indent."""
-        self.c_print(self.indent)
+        self.c_print(self.indent * ' ')
 
 
     def print_headers(self, custom_func: object = None) -> None:
@@ -196,7 +194,7 @@ class TableInfo_AuxMethods():
             self.print_cell(header, key, left = left, indent = indent)
 
             if i == len(self.tbl_keys) - 1:
-                print()
+                print()     # newline
             else:
                 self.print_col_delim()
         return
@@ -230,7 +228,7 @@ class TableInfo_AuxMethods():
         def print_row(row_records: dict, num_printed: int) -> Tuple[ dict, int]:
             """Prints values for rows without extending outside column."""
             for k in self.tbl_keys:
-                ## Already printed
+                ## If already printed.
                 if row_records[k][r] == -1:
                     indent = True if k == self.records_key else False
                     self.print_cell('', k, indent= indent)
@@ -240,7 +238,7 @@ class TableInfo_AuxMethods():
                         self.print_col_delim()
                     continue
                 
-                ## Print val & Spaces
+                ## Print cell
                 low, upp = row_records[k][r]     ## Ranges
                 val = row_records[k][v][low:upp]
                 left = True if k != self.records_key else False
@@ -252,8 +250,7 @@ class TableInfo_AuxMethods():
                 else:
                     self.print_col_delim()
                     
-
-                ## Check finished printing
+                ## Check done printing
                 if upp == len(row_records[k][v]):
                     num_printed += 1
                     row_records[k][r] = -1
@@ -266,7 +263,6 @@ class TableInfo_AuxMethods():
                 else:
                     upp = len(row_records[k][v])
                 row_records[k][r] = (low, upp)
-                
             return row_records, num_printed
 
 
@@ -283,7 +279,7 @@ class TableInfo_AuxMethods():
             
             # print row
             num_printed = 0
-            while num_printed != len(self.tbl_keys):       # not realllyyyyyy O(N**2)
+            while num_printed != len(self.tbl_keys):
                 row_records, num_printed = print_row(row_records, num_printed)
         return None
 

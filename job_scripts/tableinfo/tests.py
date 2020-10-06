@@ -2,7 +2,7 @@
  * @author [Jai Miles]
  * @email [jaimiles23@gmail.com]
  * @create date 2020-10-04 20:15:35
- * @modify date 2020-10-06 14:29:18
+ * @modify date 2020-10-06 15:16:30
  * @desc [
     Tests for TableInfo: init, adding, & printing
  ]
@@ -13,8 +13,11 @@
 # Imports
 ##########
 
+import random
+
 from table_class import TableInfo
 from dataclasses import dataclass
+
 
 ##########
 # Tests Init
@@ -179,8 +182,17 @@ def test_print_info():
 		tbl.add_entry(r)
 	
 	tbl.print_info()
+
+	## Test 4
+	keys = ['a', 'b', 'c', 'd', 'e']
+	tbl = TableInfo(keys)
+
+	for _ in range(100):
+		entry = [random.randint(1, 10) for _ in keys]
+		tbl.add_entry(entry)
 	
-	
+	tbl.print_info()
+
 
 def print_test_header(text: str):
 	header = '#' * 10

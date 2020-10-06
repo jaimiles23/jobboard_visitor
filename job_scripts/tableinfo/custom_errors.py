@@ -25,9 +25,6 @@ from script_objects import Any, Iterator, Union, UserDefinedClass
 @dataclass
 class TblEntryWarning(UserWarning):
 	"""Class to show warnings about table entries."""
-	## Warning info
-	WARN_STACK = 2
-
 	## Warning keys
 	WARN_LEN = 'length'
 	WARN_KEYS = 'keys'
@@ -45,7 +42,6 @@ class TblEntryWarning(UserWarning):
 		entry (Union[dict, Iterator[Any], UserDefinedClass]): information to record.
 		tbl_info (dict): table holding information.
 		show_values (bool, optional): show value assignment. Defaults to False.
-		stack (int, optional): number of lines to go back. Defaults to WARN_STACK.
 	"""
 	warn_type: str
 	entry: Union[dict, Iterator[Any], UserDefinedClass]
@@ -61,7 +57,10 @@ class TblEntryWarning(UserWarning):
 		
 
 	def warn_message(self):
-		"""Shows warning that iterator length does not match keys length."""
+		"""Shows warning that iterator length does not match keys length.
+		
+		if show_values, prints value assignment.
+		"""
 		if self.show_values:
 			msg_val_assignment = ['\nFields assigned values as follow:']
 			for k, v in self.entry:
@@ -72,6 +71,5 @@ class TblEntryWarning(UserWarning):
 			warning_message = ''
 		
 		warnings.warn(warning_message)
-		
 		# https://pymotw.com/2/warnings/ - use stack to show number of lines to move up.
 
