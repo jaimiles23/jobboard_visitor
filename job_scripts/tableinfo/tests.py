@@ -132,8 +132,23 @@ def test_add_entries() -> bool:
 				print(getattr(tbl, k), v)
 				raise Exception
 
-	
 
+def test_print_info():
+	print_test_header("Testing print info")
+	keys = ['a', 'b', 'c', 'd']
+	tbl = TableInfo(keys)
+
+	records = (
+		[1,2,3,4],
+		[1,2,3],
+		[1,2,3,4],
+		[]
+	)
+	for r in records:
+		tbl.add_entry(r)
+	
+	tbl.print_info()
+	
 
 def print_test_header(text: str):
 	header = '#' * 10
@@ -146,8 +161,9 @@ def print_test_header(text: str):
 ##########
 
 def main():
-	test_init_tbl()
-	test_add_entries()
+	# test_init_tbl()
+	# test_add_entries()
+	test_print_info()
 
 
 if __name__ == "__main__":

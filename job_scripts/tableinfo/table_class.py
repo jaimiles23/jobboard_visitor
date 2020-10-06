@@ -190,10 +190,10 @@ class TableInfo(TableInfo_AuxMethods):
 			- Uses auxiliary methods in "aux_methods" module.
 		"""
 		## Table characters
+		self.num_spaces = num_spaces
 		col_sep = col_sep if v_lines else ''
 		self.col_sep = col_sep
-		self.num_spaces = num_spaces
-
+		
 		## Table Widths & Heights
 		self.set_width_attrs()
 		self.set_row_heights()
