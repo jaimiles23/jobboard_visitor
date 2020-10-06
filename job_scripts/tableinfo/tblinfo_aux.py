@@ -123,6 +123,7 @@ class Aux_TblInfo():
             tot_pad_needed = sum((self.width_per_col[k] for k in cols_to_pad))
             for k in cols_to_pad:
                 prop_extra_padding = (self.width_per_col[k] / tot_pad_needed) * extra_padding
+                prop_extra_padding = prop_extra_padding if 
                 prop_col_width[k] += int(prop_extra_padding)
 
             return prop_col_width

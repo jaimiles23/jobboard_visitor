@@ -40,7 +40,7 @@ class JobSite(object):
     sites_opened = 0
     flag_can_open = True
 
-    print_attr = (
+    attrs_to_print = (
         'ident',
         'name',
         ## ADD ALL OF THESE BELOW

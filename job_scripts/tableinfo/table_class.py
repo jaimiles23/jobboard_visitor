@@ -6,6 +6,10 @@
  * @modify date 2020-10-05 14:58:33
  * @desc [
     Contains TableInfo class. Stores & Prints information.
+
+TODO:
+	- Add show_records parameter. If false, uses .keys instead of .tbl_keys for printing.
+		- can assign one of these to a master self attr, e.g., self.print_keys.
 ]
 */
 """
@@ -43,7 +47,9 @@ class TableInfo(Aux_TblInfo):
 		"""
 		if not hasattr(tbl_keys, '__iter__'):
 			raise Exception("Initialization TableInfo must be type: List, Tuple, or Dictionary.")
-		tbl_keys = tbl_keys if not isinstance(tbl_keys, dict) else list(tbl_keys.keys())
+		if isinstance(tbl_keys, list):		pass
+		elif isinstance(tbl_keys, tuple):	tbl_keys = list(tbl_keys)
+		elif isinstance(tbl_keys, dict):	tbl_keys = list(tbl_keys.keys())
 
 		## Record information
 		self.records = 0
@@ -52,7 +58,7 @@ class TableInfo(Aux_TblInfo):
 
 		## Info for printing
 		self.num_cols = len(self.keys) + 1   # records col
-		self.width_per_col = {k:0 for k in tbl_keys}
+		self.width_per_col = {k: len(k) for k in tbl_keys}
 		self.col_sep = '|'
 		self.num_spaces = 3
 

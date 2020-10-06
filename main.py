@@ -55,10 +55,13 @@ def main():
     ## 3
     print(header, steps[3])
 
-    
+    tbl = TableInfo( JobSite.attrs_to_print)
     JobSite.clean_queue(all_jobsites)
     for jobsite in all_jobsites:
+        tbl.add_entry(jobsite, user_object=True)
         jobsite.open_websites()
+    
+    tbl.print_info()
         
     ## 4
     print(header, steps[4])
