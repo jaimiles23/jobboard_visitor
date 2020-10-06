@@ -4,7 +4,7 @@
  * @create date 2020-10-04 20:13:10
  * @modify date 2020-10-04 20:13:10
  * @desc [
-    Constants for printing
+   Constants for printing
  ]
  */
 """
@@ -14,7 +14,7 @@
 ##########
 
 ## allowed space on terminal
-ALLOWED_TERM_WIDTH = 0.98
+ALLOWED_TERM_WIDTH = 0.75
 
 ## warnings
 WARN_STACK = 2

@@ -194,10 +194,9 @@ class TableInfo(TableInfo_AuxMethods):
 		
 		## Table Widths & Heights
 		self.set_width_attrs()
-		self.set_row_heights()
-
+		# self.set_row_heights()
+		
 		self.print_headers()
 		self.print_horizontal_line()
 		self.print_records()
-
-
+		print('\n' * 2, end = '')

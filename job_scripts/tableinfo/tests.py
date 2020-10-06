@@ -4,7 +4,7 @@
  * @create date 2020-10-04 20:15:35
  * @modify date 2020-10-04 20:15:35
  * @desc [
-    Tests for printing functions
+    Tests for TableInfo: init, adding, & printing
  ]
  */
 """
@@ -135,6 +135,7 @@ def test_add_entries() -> bool:
 
 def test_print_info():
 	print_test_header("Testing print info")
+	## Test 1
 	keys = ['a', 'b', 'c', 'd']
 	tbl = TableInfo(keys)
 
@@ -142,6 +143,21 @@ def test_print_info():
 		[1,2,3,4],
 		[1,2,3],
 		[1,2,3,4],
+		[]
+	)
+	for r in records:
+		tbl.add_entry(r)
+	
+	tbl.print_info()
+
+	## Test 2
+	keys = ['a', 'b', 'c', 'd']
+	tbl = TableInfo(keys)
+
+	records = (
+		['asdfasf', 1, 2, '1' * 500],
+		[None, None, 1, 2],
+		['adsfadsfh', 5, 5, ''],
 		[]
 	)
 	for r in records:
@@ -162,8 +178,8 @@ def print_test_header(text: str):
 ##########
 
 def main():
-	# test_init_tbl()
-	# test_add_entries()
+	test_init_tbl()
+	test_add_entries()
 	test_print_info()
 
 

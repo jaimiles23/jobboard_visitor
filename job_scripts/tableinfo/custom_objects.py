@@ -13,7 +13,7 @@
 # Imports
 ##########
 
-from typing import Union, Any, Iterator
+from typing import Union, Any, Iterator, Dict, Tuple
 
 
 ##########

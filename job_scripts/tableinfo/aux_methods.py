@@ -8,6 +8,8 @@
 
     NOTE: Will need to add other length counting methods for stri/dicts. 
     May like to create self.c_len() methods for such
+
+    NOTE: integrate aligned list when passing initial keys. cntrl search "left".
  ]
  */
 """
@@ -19,15 +21,17 @@
 import os
 import math
 from constants import ALLOWED_TERM_WIDTH
-from custom_objects import Table, Union
+from custom_objects import Table, Union, Dict, Tuple
 
 
 ##########
 # Auxiliary methods for the TableInfo class
 ##########
 class TableInfo_AuxMethods():
+    indent = 3 * ' '
     records_key = '#'
     h_line = '-'
+
 
     def __init__(self):
         self.records = 0
@@ -104,27 +108,27 @@ class TableInfo_AuxMethods():
     ##########
     # Row Height
     ##########
-    def set_row_heights(self) -> dict:
-        """Returns dictionary of maximum height required for each row.
+    # def set_row_heights(self) -> dict:
+    #     """Returns dictionary of maximum height required for each row.
 
-        Args:
-            col_widths (dict): dict of column widths 
+    #     Args:
+    #         col_widths (dict): dict of column widths 
 
-        Returns:
-            dict: [description]
-        """
-        def get_max_row_height(row: int) -> int:
-            """Returns max height required for each row."""
-            max_height = 1
-            for k in self.keys:
-                cell_len, col_len = len(str(getattr(self, k)[row])), self.width_per_col[k]
-                row_col_height = math.ceil(cell_len / col_len)
+    #     Returns:
+    #         dict: [description]
+    #     """
+    #     def get_max_row_height(row: int) -> int:
+    #         """Returns max height required for each row."""
+    #         max_height = 1
+    #         for k in self.keys:
+    #             cell_len, col_len = len(str(getattr(self, k)[row])), self.width_per_col[k]
+    #             row_col_height = math.ceil(cell_len / col_len)
 
-                if row_col_height > max_height:
-                    max_height = row_col_height
-            return max_height
+    #             if row_col_height > max_height:
+    #                 max_height = row_col_height
+    #         return max_height
 
-        self.row_heights = {r: get_max_row_height(r) for r in range(self.records)}
+    #     self.row_heights = {r: get_max_row_height(r) for r in range(self.records)}
     
 
     ##########
@@ -135,6 +139,7 @@ class TableInfo_AuxMethods():
         """
         print(*args, sep = '', end = '')
     
+
     def print_col_delim(self) -> None:
         """Prints column delimiters: num_spaces, col_sep, num_spaces
         
@@ -145,6 +150,31 @@ class TableInfo_AuxMethods():
         else:
             self.c_print(self.num_spaces * ' ', self.col_sep, self.num_spaces * ' ')
     
+
+    def print_cell(self, val: str, col: str, left: bool = True, indent: bool = False):
+        """Print cell contents
+
+        Args:
+            val (str): Value in cell
+            col (str): Column of printing
+            left (bool, optional): Print left aligned. Otherwise right aligned. Defaults to True.
+            indent (bool, optional): Print initial indent for row. Defaults to False.
+        """
+        if indent:
+            self.print_indent()
+        if left:
+            self.c_print(val)
+            self.fill_space(val, col)
+        else:
+            self.fill_space(val, col)
+            self.c_print(val)
+
+
+    def print_indent(self):
+        """Prints table indent."""
+        self.c_print(self.indent)
+
+
     def print_headers(self, custom_func: object = None) -> None:
         """Prints headers. Can pass custom function to call on headers
 
@@ -154,47 +184,98 @@ class TableInfo_AuxMethods():
         for i in range(len(self.tbl_keys)):
             key = self.tbl_keys[i]
             header = custom_func(key) if custom_func else key
-            self.c_print(header)
-            self.fill_space(header, key)
+
+            left = True if i > 0 else False
+            indent = True if i == 0 else False
+            self.print_cell(header, key, left = left, indent = indent)
 
             if i == len(self.tbl_keys) - 1:
                 print()
             else:
                 self.print_col_delim()
-
         return
     
+
     def print_horizontal_line(self) -> None:
         """Prints horizontal lines on the table."""
-        for i in range(len(self.tbl_keys)):
-            col_width = self.width_per_col[ self.tbl_keys[i]]
+        for k in self.tbl_keys:
+            col_width = self.width_per_col[k]
 
+            if k == self.records_key:
+                self.print_indent()
             self.c_print( self.h_line * col_width)
 
-            if i == len(self.tbl_keys) - 1:
+            if k == self.tbl_keys[-1]:
                 print()
             else:
                 self.print_col_delim()
     
+
     def print_records(self) -> None:
-        """Prints table records for table."""
-        for i in range(self.records):
-            for j in range(len(self.tbl_keys)):
-                key = self.tbl_keys[j]
-
-                if key == self.records_key:
-                   val = i + 1
-                else:
-                    val = getattr(self, key)[i]
-                
-                self.c_print(val)
-                self.fill_space(val, key)
-
-                if j == len(self.tbl_keys) - 1:
-                    print()
-                else:
+        """Prints table records for table.
+        
+        Aux functions:
+            - print_row
+        
+        Notes:
+            - v, r constants for 'values' and 'range'
+            - range of -1 indicates finished printing value.
+        """
+        def print_row(row_records: dict, num_printed: int) -> Tuple[ dict, int]:
+            """Prints values for rows without extending outside column."""
+            for k in self.tbl_keys:
+                ## Already printed
+                if row_records[k][r] == -1:
+                    indent = True if k == self.records_key else False
+                    self.print_cell('', k, indent= indent)
                     self.print_col_delim()
-        return
+                    continue
+                
+                ## Print val & Spaces
+                low, upp = row_records[k][r]     ## Ranges
+                val = row_records[k][v][low:upp]
+                left = True if k != self.records_key else False
+                indent = True if k == self.records_key else False
+                self.print_cell(val, k, left, indent)
+
+                if k != self.tbl_keys[-1]:
+                    self.print_col_delim()
+                else:
+                    print()
+
+                ## Check finished printing
+                if upp == len(row_records[k][v]):
+                    num_printed += 1
+                    row_records[k][r] = -1
+                    continue
+                
+                ## Update range
+                low = upp
+                if (upp + self.width_per_col[k]) < len(row_records[k][v]):
+                    upp = upp + self.width_per_col[k]
+                else:
+                    upp = len(row_records[k][v])
+                row_records[k][r] = (low, upp)
+                
+            return row_records, num_printed
+
+
+        ## Main function
+        v, r = 'val', 'range'
+        for i in range(self.records):
+            row_records = {k : {} for k in self.tbl_keys}
+
+            # get records for row
+            for k in self.tbl_keys:     
+                val = str(i + 1) if (k == self.records_key) else str(getattr(self, k)[i])
+                upp = len(val) if len(val) <= self.width_per_col[k] else self.width_per_col[k]
+                row_records[k][v], row_records[k][r] = val, (0, upp)
+            
+            # print row
+            num_printed = 0
+            while num_printed != len(self.tbl_keys):       # not realllyyyyyy O(N**2)
+                row_records, num_printed = print_row(row_records, num_printed)
+        return None
 
 
     ##########
