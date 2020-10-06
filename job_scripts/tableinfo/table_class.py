@@ -48,6 +48,7 @@ class TableInfo(TableInfo_AuxMethods):
 
 		self.records = 0
 		self.keys = tbl_keys
+		self.all_keys = [self.records_key] + tbl_keys
 
 		## Printing info
 		self.num_cols = len(self.keys) + 1   # records column
@@ -172,8 +173,7 @@ class TableInfo(TableInfo_AuxMethods):
 		num_spaces: int = 3,
 		row_sep: str = '-',
 		col_sep: str = '|', 
-		h_lines: bool = False,
-		v_lines: bool = False,
+		v_lines: bool = True,
 		column_alignment: Union[dict, None] = {}
 	):
 		"""Prints information stored in the table.
@@ -182,8 +182,7 @@ class TableInfo(TableInfo_AuxMethods):
 			num_spaces (int, optional): Number of spaces b/w col separator. Defaults to 3.
 			row_sep (str, optional): Char to separate rows. Defaults to '-'.
 			col_sep (str, optional): Char to separate cols. Defaults to '|'.
-			h_lines (bool, optional): Print lines b/w rows. Defaults to False.
-			v_lines (bool, optional): Print lines b/w columns. Defaults to False.
+			v_lines (bool, optional): Print lines b/w columns. Defaults to True	.
 			column_alignment (Union[dict, None], optional): colname: (l,r,c) alignment. Defaults to None.
 		
 		Note:
@@ -191,11 +190,12 @@ class TableInfo(TableInfo_AuxMethods):
 		"""
 		## Table characters
 		self.num_spaces = num_spaces
-		col_sep = col_sep if v_lines else ''
-		self.col_sep = col_sep
+		self.col_sep = col_sep if v_lines else ''
 		
 		## Table Widths & Heights
 		self.set_width_attrs()
 		self.set_row_heights()
 
 		self.print_headers()
+
+

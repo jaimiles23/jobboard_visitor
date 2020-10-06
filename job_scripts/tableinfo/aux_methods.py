@@ -31,6 +31,8 @@ class TableInfo_AuxMethods():
     def __init__(self):
         self.records = 0
         self.keys = []
+        self.tbl_keys = self.keys + [self.records_key]
+        
         self.num_cols = len(self.keys) + 1   # records column
         self.width_per_col = {}
 
@@ -130,7 +132,7 @@ class TableInfo_AuxMethods():
     def c_print(self, *args) -> None:
         """Custom print w/ no separation/end chars.
         """
-        print(args, sep = '', end = '')
+        print(*args, sep = '', end = '')
     
     def print_col_delim(self) -> None:
         """Prints column delimiters: num_spaces, col_sep, num_spaces
@@ -138,10 +140,10 @@ class TableInfo_AuxMethods():
         If no col_sep, prints num_spaces.
         """
         if len(self.col_sep) == 0:
-            self.c_print(self.num_spaces)
+            self.c_print(self.num_spaces) * ' '
         else:
             self.c_print(self.num_spaces * ' ', self.col_sep, self.num_spaces * ' ')
-
+    
     def print_headers(self, custom_func: object = None) -> None:
         """Prints headers. Can pass custom function to call on headers
 
@@ -150,13 +152,19 @@ class TableInfo_AuxMethods():
         """
         for h in ([self.records_key] + self.keys[:-1]):
             header = custom_func(h) if custom_func else h
-            self.c_print(header, self.fill_space(h, h))
+            self.c_print(header)
+            self.fill_space(header, h)
             self.print_col_delim()
         
         last_col = self.keys[-1]
         header = custom_func(last_col) if custom_func else last_col
-        self.c_print(header, self.fill_space(last_col, last_col, newline=True))
+        self.c_print(header)
+        self.fill_space(header, last_col, newline=True)
         return
+    
+    def print_row(self) -> None:
+        """Prints horizontal lines on the table."""
+
         
 
     ##########

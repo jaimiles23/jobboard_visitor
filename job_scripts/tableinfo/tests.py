@@ -149,6 +149,7 @@ def test_print_info():
 	
 	tbl.print_info()
 	
+	
 
 def print_test_header(text: str):
 	header = '#' * 10
