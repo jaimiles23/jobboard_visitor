@@ -35,10 +35,12 @@ class TableInfo(TableInfo_AuxMethods):
 
 		Args:
 			tbl_keys (Union[dict, Iterator[Any]]): List of attributes to create
+		
+		TODO: Test if passing dict.keys() works.
 		"""
 		if not hasattr(tbl_keys, '__iter__'):
 			raise Exception("Initialization TableInfo must be type: List, Tuple, or Dictionary.")
-		tbl_keys = tbl_keys if hasattr(tbl_keys, '__iter__') else list(tbl_keys.keys())
+		tbl_keys = tbl_keys if not isinstance(dict, tbl_keys) else list(tbl_keys.keys())
 
 		## Record information
 		self.records = 0
@@ -131,7 +133,7 @@ class TableInfo(TableInfo_AuxMethods):
 		self.records += 1
 		self.update_col_lengths(entry_dict)
 		return None
-	
+
 
 	def update_col_lengths(self, entry_dict) -> None:
 		"""Updates the column lengths if entry_dict[k] is > than entry.
@@ -147,12 +149,15 @@ class TableInfo(TableInfo_AuxMethods):
 	
 
 	def add_entries(self, entries: Iterator, user_objects: bool = False) -> None:
-		"""Calls add_entry() method on list.
+		"""Calls add_entry() method on iterable.
 
 		Args:
 			entries (Iterator): Iterable of entries to add.
 			user_objects (bool, optional): Indicates if entries are user defined objects. Defaults to False.
 		"""
+		if not hasattr(entries, '__iter__'):
+			raise Exception("Must pass Iterator!")
+
 		for entry in entries:
 			self.add_entry(entry, user_object= user_objects)
 		return None
@@ -179,7 +184,7 @@ class TableInfo(TableInfo_AuxMethods):
 			column_alignment (Union[dict, None], optional): colname: (l,r,c) alignment. Defaults to None.
 		
 		Note:
-			- All methods used are stored in the Auxiliary methods module.
+			- Print methods used are stored in the Auxiliary methods module.
 		"""
 		## Table characters
 		self.num_spaces = num_spaces
