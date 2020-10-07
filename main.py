@@ -40,8 +40,9 @@ def main():
     steps = {
         1   :   "Load & Clean JobSite Dataframe",
         2   :   "Create JobSite Instances from Dataframe",
-        3   :   "Open JobSites in Queue",
-        4   :   "Save new job queue"
+        3   :   "Load Saved Job Queue",
+        4   :   "Open JobSites in Queue",
+        5   :   "Save New Job Queue"
     }
     header = '#' * 5
     ## 1
@@ -52,19 +53,23 @@ def main():
     print(header, steps[2])
     all_jobsites = jobsite_instances.create_jobsite_instances(df_jobsites)
 
-    ## 3
+    ## 3 
     print(header, steps[3])
+    JobQueue(all_jobsites)
+
+
+    ## 4
+    print(header, steps[4])
 
     tbl = TableInfo( JobSite.attrs_to_print)
-    JobSite.clean_queue(all_jobsites)
     for jobsite in all_jobsites:
-        jobsite.open_websites()
+        jobsite.open_websites( JobQueue.jo)
         tbl.add_entry(jobsite, user_object=True)
     
     tbl.print_info()
         
-    ## 4
-    print(header, steps[4])
+    ## 5
+    print(header, steps[5])
     JobQueue.save_queue( JobSite.get_new_queue())
 
 
