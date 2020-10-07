@@ -67,8 +67,6 @@ def main():
     print(header, steps[4])
     JobQueue.save_queue( JobSite.get_new_queue())
 
-    JobSite.reset_class_vars()          # reset for testing purposes
-
 
 if __name__ == "__main__":
     main()

@@ -31,9 +31,9 @@ from .script_objects import JobIDs, List, Tuple, All_JobSites
 
 @dataclass
 class JobSite(object):
-
     ## Class vars
-    jobsite_queue = JobQueue.load_queue()     
+    jobsite_queue = JobQueue.load_queue()   # TODO: Change this to a passed arg in open_wbesite()
+    # NOTE: NOT CLASS ATTR.
     used_jobsites = list()
 
     max_sites_opened = constants.MAX_SITES_OPENED
@@ -60,100 +60,6 @@ class JobSite(object):
             print(f"- Opened {cls.sites_opened} / {cls.max_sites_opened}")
         JobSite.flag_show_opened_max_sites = True
         return
-
-
-    @classmethod
-    def reset_class_vars(cls) -> Tuple[list, list, int, int]:
-        """Resets JobSite constant variables. 
-
-        This accounts for when the script is run in loop during testing.
-        """
-        JobSite.jobsite_queue = JobQueue.load_queue()
-        JobSite.used_jobsites = list()
-        JobSite.sites_opened = 0
-
-
-    @classmethod
-    def get_new_queue(cls) -> JobIDs:
-        """Returns new queue to use
-
-        Returns:
-            JobIDs: representing queue of jobsite IDs
-
-        NOTE:
-            - removed calculated w/ set math to change index for O(N) time complexity.
-        """
-        indices_used = set()
-        for index, ident in JobSite.used_jobsites:
-            removed = sum(1 if (num < index) else 0 for num in indices_used)
-            del JobSite.jobsite_queue[index - removed]
-            indices_used.add(index)
-
-            ## Add to end of list
-            JobSite.jobsite_queue.append(ident)
-        return JobSite.jobsite_queue
-    
-
-    @classmethod
-    def clean_queue(cls, all_jobsites: All_JobSites) -> None:
-        """Cleans job queue of objects that match instantiated JobSites.
-
-        Args:
-            all_jobsites (All_JobSites): list of instantiated job sites
-        
-        Calls auxiliary bin_search function to locate un-used jobsites.
-        """
-        def bin_search(arr: list, l: int, r: int, num: int) -> int:
-            """Binary search in array to locate number
-
-            Args:
-                arr (list): items to search
-                l (int): left bound
-                r (int): right bound
-                num (int): num to find
-
-            Returns:
-                int: index of num, or -1 if number doesn't exist.
-            """
-            def helper(arr: list, l: int, r: int, num: int) -> int:
-                """Aux recursive function."""
-                mid = (l + r) // 2
-                if r < l: return -1
-                elif arr[mid] == num: return mid
-                elif arr[mid] > num: return helper(arr, l, mid - 1, num)
-                else: return helper(arr, mid + 1, r, num)
-            
-            try:
-                int(num)
-                return helper(arr, l, r, num)
-            except:
-                return -1   # delete non int values
-
-
-        ## Start Cleaning Queue
-        if len(JobSite.jobsite_queue) == len(all_jobsites):
-            return
-        
-        print("- Cleaning queue of non-existent jobs")
-        ## sort job ids to look through
-        jobsite_ids = [jobsite.ident for jobsite in all_jobsites]
-        jobsite_ids.sort()
-
-        ## remove unnecessary items from queue
-        removed = 0
-        for i in range(len(JobSite.jobsite_queue)):
-            binsearch_results = bin_search(jobsite_ids, 0, len(jobsite_ids) - 1, JobSite.jobsite_queue[i - removed])
-            
-            if binsearch_results == -1:
-                print(f"\t- id ({JobSite.jobsite_queue[i - removed]=}) not located - removed")
-                del JobSite.jobsite_queue[i - removed]
-                removed += 1
-
-        ## update queue indices
-        for job in all_jobsites:
-            job.Q_index = job.get_Q_index()
-        print("- Updated queue.")
-        return 
 
 
     ##########
