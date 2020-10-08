@@ -74,6 +74,7 @@ class TableInfo(Aux_TblInfo):
 		self,
 		entry: Union[dict, Iterator[Any], UserDefinedClass],
 		user_object: bool = False,
+		ignore_warnings: bool = False,
 		show_warning: bool = True,
 		show_warn_vals: bool = False
 	) -> None:
@@ -82,6 +83,7 @@ class TableInfo(Aux_TblInfo):
 		Args:
 			entry (Union[dict, Iterator[Any], UserDefinedClass]): Info to add to table.
 			user_object (bool, optional): If entry is user_object. Defaults to False.
+			ignore_warnings (bool, optional): Ignore all warnings. Defaults to False.
 			show_warning (bool, optional): Show warnings when adding entry. Defaults to True.
 			show_warn_vals (bool, optional): Show value assignments in warning. Defaults to False.
 		
@@ -132,7 +134,7 @@ class TableInfo(Aux_TblInfo):
 			tbl_info = getattr(self, k) + [val]
 			setattr(self, k, tbl_info)
 		
-		if flag_show_warning:
+		if flag_show_warning and not ignore_warnings:
 			TblEntryWarning(
 				warn_type= warn_type, 
 				entry = entry,
