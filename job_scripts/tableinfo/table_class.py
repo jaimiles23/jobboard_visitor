@@ -135,7 +135,8 @@ class TableInfo(Aux_TblInfo):
 		if flag_show_warning:
 			TblEntryWarning(
 				warn_type= warn_type, 
-				entry= entry_dict, 
+				entry = entry,
+				entry_dict= entry_dict, 
 				show_values= show_warn_vals)
 		
 		## Miscellaneous

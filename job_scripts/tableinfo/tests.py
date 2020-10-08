@@ -74,7 +74,7 @@ def test_add_entries() -> bool:
 	for e, r in entry_results:
 		tbl = None
 		tbl = TableInfo(keys)
-		tbl.add_entry(e)
+		tbl.add_entry(e, show_warn_vals= True)
 		for k, v in r.items():
 			try:			
 				assert getattr(tbl, k) == v
@@ -83,56 +83,56 @@ def test_add_entries() -> bool:
 				print(getattr(tbl, k), v)
 				raise Exception
 	
-	###### By Dict
-	print_test_header("Test Add items by dict")
-	keys = ['a', 'b', 'c']
-	entry_results = (
-		( {'a': 1, 'b':2, 'c': 3}, {'a':[1], 'b':[2], 'c':[3]}),
-		( {'a': 1, 'c': 3}, {'a':[1], 'b':[None], 'c':[3]} ),
-		( {'a': 1, 'b':2, 'd': 3}, {'a':[1], 'b':[2], 'c':[None]} ),
-	)
-	for e, r in entry_results:
-		tbl = None
-		tbl = TableInfo(keys)
-		tbl.add_entry(e)
-		for k, v in r.items():
-			try:			
-				assert getattr(tbl, k) == v
-			except:
-				print(k, v)
-				print(getattr(tbl, k), v)
-				raise Exception
+	# ###### By Dict
+	# print_test_header("Test Add items by dict")
+	# keys = ['a', 'b', 'c']
+	# entry_results = (
+	# 	( {'a': 1, 'b':2, 'c': 3}, {'a':[1], 'b':[2], 'c':[3]}),
+	# 	( {'a': 1, 'c': 3}, {'a':[1], 'b':[None], 'c':[3]} ),
+	# 	( {'a': 1, 'b':2, 'd': 3}, {'a':[1], 'b':[2], 'c':[None]} ),
+	# )
+	# for e, r in entry_results:
+	# 	tbl = None
+	# 	tbl = TableInfo(keys)
+	# 	tbl.add_entry(e)
+	# 	for k, v in r.items():
+	# 		try:			
+	# 			assert getattr(tbl, k) == v
+	# 		except:
+	# 			print(k, v)
+	# 			print(getattr(tbl, k), v)
+	# 			raise Exception
 	
-	###### By Class
-	print_test_header("Test Add items by Class")
-	keys = ['a', 'b']
-	@dataclass
-	class test1():
-		a: int
-		b: int
-	@dataclass
-	class test2():
-		a: int
-		c: int
+	# ###### By Class
+	# print_test_header("Test Add items by Class")
+	# keys = ['a', 'b']
+	# @dataclass
+	# class test1():
+	# 	a: int
+	# 	b: int
+	# @dataclass
+	# class test2():
+	# 	a: int
+	# 	c: int
 	
-	a = test1(1, 2)
-	b = test2(1,2)
+	# a = test1(1, 2)
+	# b = test2(1,2)
 
-	entry_results = (
-		(a, {'a':[1], 'b': [2]}),
-		(b, {'a':[1], 'b': [None]})
-	)
-	for e, r in entry_results:
-		tbl = None
-		tbl = TableInfo(keys)
-		tbl.add_entry(e, user_object=True)
-		for k, v in r.items():
-			try:			
-				assert getattr(tbl, k) == v
-			except:
-				print(k, v)
-				print(getattr(tbl, k), v)
-				raise Exception
+	# entry_results = (
+	# 	(a, {'a':[1], 'b': [2]}),
+	# 	(b, {'a':[1], 'b': [None]})
+	# )
+	# for e, r in entry_results:
+	# 	tbl = None
+	# 	tbl = TableInfo(keys)
+	# 	tbl.add_entry(e, user_object=True)
+	# 	for k, v in r.items():
+	# 		try:			
+	# 			assert getattr(tbl, k) == v
+	# 		except:
+	# 			print(k, v)
+	# 			print(getattr(tbl, k), v)
+	# 			raise Exception
 
 
 def test_print_info():
@@ -205,9 +205,9 @@ def print_test_header(text: str):
 ##########
 
 def main():
-	test_init_tbl()
+	# test_init_tbl()
 	test_add_entries()
-	test_print_info()
+	# test_print_info()
 
 
 if __name__ == "__main__":

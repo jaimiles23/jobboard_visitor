@@ -25,7 +25,7 @@ except:
 # Warnings
 ##########
 @dataclass
-class TblEntryWarning(UserWarning):
+class Tblentry_dictWarning(UserWarning):
 	"""Class to show warnings about table entries."""
 	## Warning keys
 	WARN_LEN = 'length'
@@ -37,16 +37,20 @@ class TblEntryWarning(UserWarning):
 	MSG_CLASS = "Class Attributes did not contain all Table fields."
 	MSG_DICT = "Dictionary did not contain all Table fields."
 
+	## Field assignment
+	MSG_FIELD = '\nFields assigned values as follow:\n'
+
 	##### Init
 	"""Uses the warn_type (str) to determine what warning message to call.
 
 	Args:
-		entry (Union[dict, Iterator[Any], UserDefinedClass]): information to record.
+		entry_dict (Union[dict, Iterator[Any], UserDefinedClass]): information to record.
 		tbl_info (dict): table holding information.
 		show_values (bool, optional): show value assignment. Defaults to False.
 	"""
 	warn_type: str
 	entry: Union[dict, Iterator[Any], UserDefinedClass]
+	entry_dict: dict
 	show_values: bool = False
 
 	def __post_init__(self):
@@ -56,6 +60,7 @@ class TblEntryWarning(UserWarning):
 			self.WARN_ATTR		:	self.MSG_DICT,
 		}
 		self.msg = warn_dict[self.warn_type]
+		self.warn_message()
 		
 
 	def warn_message(self):
@@ -63,15 +68,14 @@ class TblEntryWarning(UserWarning):
 		
 		if show_values, prints value assignment.
 		"""
+		warning_msg = [self.msg]
 		if self.show_values:
-			msg_val_assignment = ['\nFields assigned values as follow:']
-			for k, v in self.entry:
+			warning_msg += [self.MSG_FIELD]
+			for k, v in self.entry_dict.items():
 				val_msg = f"\t- {k} : {v}\n"
-				msg_val_assignment.append(val_msg)
-			warning_message = ''.join(msg_val_assignment)
-		else:
-			warning_message = ''
+				warning_msg.append(val_msg)
+			warning_msg = ''.join(warning_msg)
 		
-		warnings.warn(warning_message)
+		warnings.warn(warning_msg)
 		# https://pymotw.com/2/warnings/ - use stack to show number of lines to move up.
 

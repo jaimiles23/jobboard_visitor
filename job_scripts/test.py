@@ -20,17 +20,17 @@ import webbrowser
 from dataclasses import dataclass
 from typing import List
 
-from .jobs_queue import JobQueue
+from .jobs_queue import QueueMethods
 
 ##########
 # Jobsite class
 ##########
 
 @dataclass
-class JobSite(object):
+class JobBoard(object):
 
     ## Constants
-    saved_queue = JobQueue.load_queue()     ## ADD FILENAME TO CONSTANTS
+    saved_queue = QueueMethods.load_queue()     ## ADD FILENAME TO CONSTANTS
     used_sites = list()
 
     ## Get next queue
@@ -44,11 +44,11 @@ class JobSite(object):
         NOTE: Could use sets, but don't to preserve order. Thus, O(N**2)
         """
         front_of_queue = list()
-        for site in JobSite.saved_queue:
-            if site not in JobSite.used_sites:
+        for site in JobBoard.saved_queue:
+            if site not in JobBoard.used_sites:
                 front_of_queue.append(site)
         
-        return front_of_queue + JobSite.used_sites
+        return front_of_queue + JobBoard.used_sites
 
 
     ##########
@@ -104,7 +104,7 @@ class JobSite(object):
     def check_in_queue(self) -> bool:
         """Checks that self.name in queue.
         """
-        if self.name in JobSite.saved_queue:
+        if self.name in JobBoard.saved_queue:
             return True
         return False
     
@@ -112,7 +112,7 @@ class JobSite(object):
     def add_to_queue(self) -> None:
         """Adds self.name to queue.
         """
-        JobSite.saved_queue.append(self.name)
+        JobBoard.saved_queue.append(self.name)
 
 
     def get_flag_show(self) -> bool:
@@ -121,8 +121,8 @@ class JobSite(object):
         Checks if times_opened matches show_x_times self variables.
         """
         flag_show = False
-        for i in range( len( JobSite.saved_queue) // self.priority):
-            if JobSite.saved_queue[i] == self.name:
+        for i in range( len( JobBoard.saved_queue) // self.priority):
+            if JobBoard.saved_queue[i] == self.name:
                 flag_show = True
                 return flag_show
         return flag_show
@@ -132,7 +132,7 @@ class JobSite(object):
         """Moves job_site name to back of saved queue if show.
         """
         if self.show:
-            JobSite.used_sites.append(self.name)
+            JobBoard.used_sites.append(self.name)
         return 
 
 

@@ -19,9 +19,9 @@
 import pandas as pd
 
 from job_scripts import (constants, custom_errors, df_methods,
-                         jobsite_instances, locations)
-from job_scripts.jobs_queue import JobQueue
-from job_scripts.jobsite_class import JobSite
+                         jobboard_instances, locations)
+from job_scripts.queue_methods import QueueMethods
+from job_scripts.jobboard_class import JobBoard
 from job_scripts.tableinfo import TableInfo
 
 
@@ -30,8 +30,8 @@ from job_scripts.tableinfo import TableInfo
 ##########
 
 def main():
-    """Opens jobsite URLS.
-
+    """
+    Opens jobsite URLS.
 		1. Load and clean jobsite jobsite data frame
 		2. Creates jobsite instances from dataframe
         3. Opens jobsites
@@ -40,37 +40,38 @@ def main():
     steps = {
         1   :   "Load & Clean JobSite Dataframe",
         2   :   "Create JobSite Instances from Dataframe",
-        3   :   "Load Saved Job Queue",
+        3   :   "Clean QueueMethods",
         4   :   "Open JobSites in Queue",
         5   :   "Save New Job Queue"
     }
-    header = '#' * 5
+    header = '>' * 3
+    
     ## 1
     print(header, steps[1])
-    df_jobsites = df_methods.get_df_jobsites()
+    df_jobsites = df_methods.get_df_jobboards()
 
     ## 2
     print(header, steps[2])
-    all_jobsites = jobsite_instances.create_jobsite_instances(df_jobsites)
+    all_jobboards = jobboard_instances.create_jobboard_instances(df_jobsites)
 
-    ## 3 
+    ## 3
     print(header, steps[3])
-    JobQueue(all_jobsites)
-
+    JobBoard.job_queue = QueueMethods.clean_queue(JobBoard.job_queue, all_jobboards)
 
     ## 4
     print(header, steps[4])
 
-    tbl = TableInfo( JobSite.attrs_to_print)
-    for jobsite in all_jobsites:
-        jobsite.open_websites( JobQueue.jo)
-        tbl.add_entry(jobsite, user_object=True)
+    tbl = TableInfo( JobBoard.attrs_to_print)
+    for jobboard in all_jobboards:
+        jobboard.open_websites()
+        tbl.add_entry(jobboard, user_object=True)
     
     tbl.print_info()
-        
+    
     ## 5
     print(header, steps[5])
-    JobQueue.save_queue( JobSite.get_new_queue())
+    QueueMethods.save_queue( JobBoard.job_queue, JobBoard.used_jobsites)
+
 
 
 if __name__ == "__main__":

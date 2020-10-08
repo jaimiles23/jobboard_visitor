@@ -12,7 +12,7 @@
 # CSV INFO
 ##########
 
-FILENAME_JOBSITES = r"C:\Users\Jai\Documents\github\job_visitor\jobboard_info.xlsx"
+FILENAME_JOBBOARDS = r"C:\Users\Jai\Documents\github\job_visitor\jobboard_info.xlsx"
 SHEETNAMES = (
 	"job_sites",
 	"country",

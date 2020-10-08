@@ -16,50 +16,46 @@
 import pickle
 
 from . import constants
-from .script_objects import JobIDs, List, Tuple, All_JobSites
+from .script_objects import JobIDs, List, Tuple, all_jobboards
 
 
 ##########
 # Pickle class 
 ##########
 
-class JobQueue(object):
+class QueueMethods(object):
     """Methods to load & save the job queue."""
+    
     ##########
     # Constants
     ##########
     filename_pickle = constants.FILENAME_PICKLE
 
-    ##########
-    # Init
-    ##########
-    def __init__(self, all_jobsites: All_JobSites):
-        self.job_queue = self.load_queue( all_jobsites)
-
 
     ##########
     # Load Queue
     ##########
-    def load_queue(self, all_jobsites: All_JobSites) -> object:
+    @staticmethod
+    def load_queue() -> object:
         """Loads pickle file
 
         Returns:
             object: returns pickle file, dict
         """
         try: 
-            saved_job_queue = pickle.load( open(self.filename_pickle, 'rb'))  
+            saved_job_queue = pickle.load( open(QueueMethods.filename_pickle, 'rb'))  
         except:
             saved_job_queue = list()
         
-        return self.clean_queue(saved_job_queue, all_jobsites)
+        return saved_job_queue
 
-
-    def clean_queue(self, job_queue: list, all_jobsites: All_JobSites) -> None:
+    @staticmethod
+    def clean_queue(job_queue: list, all_jobboards: all_jobboards) -> None:
         """Cleans job queue of objects that match instantiated JobSites.
 
         Args:
             job_queue (list): Job queue
-            all_jobsites (All_JobSites): list of instantiated job sites
+            all_jobboards (all_jobboards): list of instantiated job sites
         
         Calls auxiliary bin_search function to locate un-used jobsites.
         """
@@ -91,13 +87,12 @@ class JobQueue(object):
 
 
         ## Start Cleaning Queue
-        if len(job_queue) == len(all_jobsites):
-            return
+        if len(job_queue) == len(all_jobboards):
+            return job_queue
         
-
         print("- Cleaning queue of non-existent jobs")
         ## Sort job ids to look through
-        jobsite_ids = [jobsite.ident for jobsite in all_jobsites]
+        jobsite_ids = [jobboard.ident for jobboard in all_jobboards]
         jobsite_ids.sort()
 
         ## Remove unnecessary items from queue
@@ -110,22 +105,24 @@ class JobQueue(object):
                 removed += 1
 
         ## Update queue indices
-        for job in all_jobsites:
+        for job in all_jobboards:
             job.Q_index = job.get_Q_index()
         print("- Updated queue.")
-        return
+        return job_queue
 
 
     ##########
     # Save Job Queue
     ##########
-    def save_queue(self, used_jobs: List[Tuple[int, int]]) -> None:
+    @staticmethod
+    def save_queue(job_queue: List[int], used_jobs: List[Tuple[int, int]]) -> None:
         """Saves dictionary to pickle file.
         """
-        new_job_queue = JobQueue.get_new_queue(self.job_queue, used_jobs)
+        new_job_queue = QueueMethods.get_new_queue(job_queue, used_jobs)
 
-        pickle.dump( new_job_queue, open(self.filename_pickle, 'wb'))
+        pickle.dump( new_job_queue, open(QueueMethods.filename_pickle, 'wb'))
         return
+
 
     @staticmethod
     def get_new_queue(

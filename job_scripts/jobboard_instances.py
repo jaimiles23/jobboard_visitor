@@ -16,27 +16,27 @@
 from .constants import (COL_CITY, COL_COUNTRY, COL_DESCRIPT, COL_ID,
                        COL_JOBBOARD, COL_NAME, COL_ORG, COL_QUEUE_PRIORITY,
                        COL_STATE, COL_URLS)
-from .jobsite_class import JobSite
-from .script_objects import All_JobSites, DataFrame
+from .jobboard_class import JobBoard
+from .script_objects import all_jobboards, DataFrame
 
 
 ##########
 # Create instances
 ##########
 
-def create_jobsite_instances(df: DataFrame) -> All_JobSites:
+def create_jobboard_instances(df: DataFrame) -> all_jobboards:
     """Creates list of All JobSites from df_jobsites
 
     Args:
         df (DataFrame): Dataframe to create JobSite instances
 
     Returns:
-        All_JobSites: List of all JobSite Instances
+        all_jobboards: List of all JobSite Instances
     """
-    all_jobsites: list = []
+    all_jobboards: list = []
 
     for i in range(len(df)):
-        jobsite = JobSite(
+        jobsite = JobBoard(
             ident = df.index[i],
             name = df[COL_NAME].iloc[i],
             urls = df[COL_URLS].iloc[i],
@@ -46,10 +46,10 @@ def create_jobsite_instances(df: DataFrame) -> All_JobSites:
             organization = df[COL_JOBBOARD].iloc[i],
             country = df[COL_COUNTRY].iloc[i],
             state = df[COL_STATE].iloc[i],
-            city = df[COL_CITY].iloc[i]
+            city = df[COL_CITY].iloc[i],
         )
-        all_jobsites.append(jobsite)
-    return all_jobsites
+        all_jobboards.append(jobsite)
+    return all_jobboards
 
 
 

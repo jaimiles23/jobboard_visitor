@@ -28,7 +28,7 @@ DataFrames = Tuple[object]
 # JobSite
 ###########
 
-All_JobSites = List[object]
+all_jobboards = List[object]
 
 
 ###########
