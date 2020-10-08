@@ -37,12 +37,12 @@ class TableInfo(Aux_TblInfo):
 	##########
 	# Init
 	##########
-	def __init__(self, tbl_keys: Union[dict, Iterator[Any]], tbl_align: Union[dict, None] = None):
+	def __init__(self, tbl_keys: Union[dict, Iterator[Any]], col_alignment: Union[dict, None] = None):
 		"""Initializes TableInfo objects with attributes based on TableInfo keys.
 
 		Args:
 			tbl_keys (Union[dict, Iterator[Any]]): List of attr keys to store information in tbl.
-			tbl_align (Union[dict, None], optional): Alignment for markdown table. Defaults to None
+			col_alignment (Union[dict, None], optional): Alignment for markdown table. Defaults to None
 		
 		TODO: Test if passing dict.keys() works.
 		"""
@@ -56,7 +56,7 @@ class TableInfo(Aux_TblInfo):
 		self.records = 0
 		self.keys = tbl_keys
 		self.tbl_keys = [self.records_key] + tbl_keys
-		self.tbl_align = tbl_align if tbl_align else {k: 'l' for k in self.tbl_keys}
+		self.col_alignment = col_alignment if col_alignment else {k: 'l' for k in self.tbl_keys}
 
 		## Info for printing
 		self.num_cols = len(self.keys) + 1   # records col
@@ -184,9 +184,11 @@ class TableInfo(Aux_TblInfo):
 		self,
 		num_spaces: int = 3,
 		v_lines: bool = True,
-		column_alignment: Union[dict, None] = {},
-		new_line: bool = True,
 		show_records_col: bool = True,
+
+		column_alignment: Union[dict, None] = {},
+		guess_alignment: bool = True, 
+		
 		markdown: bool = False,
 		md_filename: str = None,
 	):
@@ -194,22 +196,31 @@ class TableInfo(Aux_TblInfo):
 
 		Args:
 			num_spaces (int, optional): Number of spaces b/w col separator. Defaults to 3.
-			v_lines (bool, optional): Print lines b/w columns. Defaults to True	.
+			v_lines (bool, optional): Print lines b/w columns. Defaults to True.
+			show_records_column (bool, optional): If should show record number. Defaults to True.
+
 			column_alignment (Union[dict, None], optional): colname: (l,r,c) alignment. Defaults to None.
-			show_records_column (bool, optional): If should show record number. Defaults to True
+			guess_alignment (bool): Autoassigns the column alignment by parsing the column.
+			
 			markdown (bool, optional): Instead of printing to console, APPEND to markdown file. Defaults to False.
 			md_filename (str, optional): markdown filename to append to. Defaults to None
 		
 		Note:
 			- Print methods used are stored in the Auxiliary methods module.
 		"""
-		## Table characters
+		## Print constants
 		self.num_spaces = num_spaces
 		self.col_sep = self.col_sep if v_lines else ''
+		self.col_alignment = column_alignment if column_alignment else self.col_alignment
 
 		## Records column
 		if not show_records_col:
 			del self.tbl_keys[0]
+			del self.col_alignment[self.records_key]
+		
+		## Check alignment
+		if guess_alignment and not column_alignment:
+			self._parse_data_for_alignment()
 
 		## Checks markdown
 		self._markdown_on(markdown, md_filename)

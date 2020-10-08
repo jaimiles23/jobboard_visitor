@@ -41,11 +41,14 @@ class Aux_TblInfo():
     """Contains aux methods & constants for the TblInfo class."""
     ALLOWED_TERM_WIDTH = 0.70
     indent = int((1 - ALLOWED_TERM_WIDTH) * 10)
-    records_key = '#'
+    records_key = 'records'
     h_line = '-'
+
+    ## markdown constants
     markdown = False
     mdfile = None
 
+    ## Alignment constants
     align_l = 'l'
     align_r = 'r'
     md_aligns = {align_l:':--', align_r:'--:'}
@@ -64,7 +67,7 @@ class Aux_TblInfo():
         self.num_spaces = 3
 
         ## markdown 
-        self.tbl_align = {k: self.align_l for k in self.tbl_keys}
+        self.col_alignment = {k: self.align_l for k in self.tbl_keys}
 
 
     ##########
@@ -81,14 +84,14 @@ class Aux_TblInfo():
     def _add_records_col_width(self) -> None:
         """Adds records column width to self._width_per_col"""
         widths = self.width_per_col
-        widths[self.records_key] = len(str(self.records))
+        widths[self.records_key] = len(max(str(self.records), self.records_key, key= len))
         self.width_per_col = widths
     
     def _set_md_widths(self) -> None:
         """Sets column widths minimum of markdown alignment characters"""
         if not self.markdown: return
         for k, v in self.width_per_col.items():
-            col_align = self.tbl_align[k]
+            col_align = self.col_alignment[k]
             if v < len(self.md_aligns[col_align]):
                 self.width_per_col[k] = len(self.md_aligns[col_align])
         return
@@ -201,8 +204,8 @@ class Aux_TblInfo():
         if indent:
             self._print_indent()
 
-        align = self.tbl_align[col]
-        if align == self.align_l:
+        align = self.col_alignment[col]
+        if (align == self.align_l) or (self.markdown):
             self._print(val)
             self._fill_space(val, col)
         elif align == self.align_r:
@@ -241,7 +244,7 @@ class Aux_TblInfo():
         """Prints horizontal lines on the table."""
         def get_align_chars(k: str):
             """Returns chars to be used in each column if writing to .md, else returns self.hline"""
-            align = self.tbl_align[k]
+            align = self.col_alignment[k]
             return self.md_aligns[align]
             
 
@@ -368,4 +371,38 @@ class Aux_TblInfo():
 
         self.markdown = False
         self.mdfile.close()
+    
+    ##########
+    # Alignment
+    ##########
+
+    def _parse_data_for_alignment(self) -> None:
+        """Automatically checks data in column how to align data.
+
+        Checks each record in the column and tries type conversion.
+        Returns type if possible.
+        """
+        coltype_aligns = {
+            int     :   self.align_r,
+            float   :   self.align_r,
+            str     :   self.align_l,
+        }
+        coltype_keys = list(coltype_aligns.keys())
+
+        for k in self.col_alignment.keys():
+            if k == self.records_key:
+                self.col_alignment[k] = self.align_r
+                continue
+
+            check_type = 0
+            for r in range(self.records):
+                try:
+                    coltype_keys[check_type](getattr(self, k)[r])
+                except:
+                    check_type += 1
+                    if check_type == len(coltype_aligns) - 1:
+                        break
+
+            self.col_alignment[k] = coltype_aligns[ coltype_keys[check_type]]
+        return
 
