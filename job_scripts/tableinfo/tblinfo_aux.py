@@ -59,6 +59,9 @@ class Aux_TblInfo():
         self.col_sep = '|'
         self.num_spaces = 3
 
+        ## markdown 
+        self.tbl_align = {k: 'l' for k in tbl_keys}
+
 
     ##########
     # Width Methods
@@ -135,7 +138,10 @@ class Aux_TblInfo():
 
         ## get_col_width_dict() parent
         allowed_width = os.get_terminal_size().columns * self.ALLOWED_TERM_WIDTH
-        if self.width_cols_total + self.non_col_space <= allowed_width:
+        if (
+        self.width_cols_total + self.non_col_space <= allowed_width
+        or self.markdown
+        ):
            return
         
         ## Get proportional column widths
@@ -152,7 +158,9 @@ class Aux_TblInfo():
     ##########
     def _print(self, *args) -> None:
         """Custom print w/ no separation/end chars."""
-        text = ''.join(args)
+        try:        text = ''.join(*args)
+        except:     text = ''.join([str(a) for a in args])
+
         if self.markdown:
             self.mdfile.write(text)
         else:   
@@ -164,7 +172,7 @@ class Aux_TblInfo():
         
         If no col_sep, prints num_spaces."""
         if len(self.col_sep) == 0:
-            self._print(self.num_spaces) * ' '
+            self._print(self.num_spaces * ' ')
         else:
             self._print(self.num_spaces * ' ', self.col_sep, self.num_spaces * ' ')
     
@@ -215,12 +223,28 @@ class Aux_TblInfo():
 
     def _print_horizontal_line(self) -> None:
         """Prints horizontal lines on the table."""
+        def get_align(k: str):
+            """Returns chars to be used in each column if writing to .md, else returns self.hline"""
+            md_aligns = {
+                'l' :   ':--',
+                'c' :   ':--:',
+                'r' :   '--:'
+            }
+            align = self.tbl_align[k]
+            return md_aligns[align]
+            
+
         for k in self.tbl_keys:
             col_width = self.width_per_col[k]
 
-            if k == self.records_key:
-                self._print_indent()
-            self._print( self.h_line * col_width)
+            if k == self.records_key: self._print_indent()
+
+            if not self.markdown:
+                self._print( self.h_line * col_width)
+            else:
+                align = get_align(k)
+                self._print( align)
+                self._fill_space(align, k)
 
             if k == self.tbl_keys[-1]:
                 self._print('\n')

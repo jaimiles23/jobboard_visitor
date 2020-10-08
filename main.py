@@ -67,8 +67,8 @@ def main():
         tbl.add_entry(jobboard, user_object=True)
     
     markdown = True
-    md_filename = 'test'
-    tbl.print_info(markdown= markdown, md_filename= md_filename)
+    md_filename = 'test.md'
+    tbl.print_info(markdown= markdown, md_filename= md_filename, v_lines= False)
     
     ## 5
     print(header, steps[5])
@@ -76,6 +76,7 @@ def main():
 
 
 
+## Main
 if __name__ == "__main__":
     main()
 

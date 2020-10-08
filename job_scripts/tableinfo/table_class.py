@@ -180,8 +180,6 @@ class TableInfo(Aux_TblInfo):
 	def print_info(
 		self,
 		num_spaces: int = 3,
-		row_sep: str = '-',
-		col_sep: str = '|', 
 		v_lines: bool = True,
 		column_alignment: Union[dict, None] = {},
 		new_line: bool = True,
@@ -192,8 +190,6 @@ class TableInfo(Aux_TblInfo):
 
 		Args:
 			num_spaces (int, optional): Number of spaces b/w col separator. Defaults to 3.
-			row_sep (str, optional): Char to separate rows. Defaults to '-'.
-			col_sep (str, optional): Char to separate cols. Defaults to '|'.
 			v_lines (bool, optional): Print lines b/w columns. Defaults to True	.
 			column_alignment (Union[dict, None], optional): colname: (l,r,c) alignment. Defaults to None.
 			new_line (bool, optional): Print new line before table. Defaults to True.
@@ -206,7 +202,7 @@ class TableInfo(Aux_TblInfo):
 		## Table characters
 		if new_line: self._print('\n' * 2)
 		self.num_spaces = num_spaces
-		self.col_sep = col_sep if v_lines else ''
+		self.col_sep = self.col_sep if v_lines else ''
 
 		## Checks markdown
 		self._markdown_on(markdown, md_filename)
