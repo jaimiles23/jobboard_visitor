@@ -33,7 +33,6 @@ except ModuleNotFoundError:
 
 class TableInfo(Aux_TblInfo):
 	"""Custom object to store user information"""
-	
 	##########
 	# Init
 	##########
@@ -206,10 +205,10 @@ class TableInfo(Aux_TblInfo):
 		self.col_sep = col_sep if v_lines else ''
 		
 		## Table Widths & Heights
-		self.set_width_attrs()
+		self._set_width_attrs()
 		# self.set_row_heights()
 		
-		self.print_headers()
-		self.print_horizontal_line()
-		self.print_records()
+		self._print_headers()
+		self._print_horizontal_line()
+		self._print_records()
 		print('\n' * 2, end = '')

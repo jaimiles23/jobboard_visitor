@@ -61,24 +61,24 @@ class Aux_TblInfo():
     ##########
     # Width Methods
     ##########
-    def set_width_attrs(self,) -> None:
+    def _set_width_attrs(self,) -> None:
         """Calls Width methods to set width attributes in class."""
-        self.add_records_col_width()
-        self.set_width_cols_total()
-        self.set_non_col_space()
-        self.set_final_colwidths_dict()
+        self._add_records_col_width()
+        self._set_width_cols_total()
+        self._set_non_col_space()
+        self._set_final_colwidths_dict()
 
-    def add_records_col_width(self) -> None:
+    def _add_records_col_width(self) -> None:
         """Adds records column width to self._width_per_col"""
         widths = self.width_per_col
         widths[self.records_key] = len(str(self.records))
         self.width_per_col = widths
 
-    def set_width_cols_total(self) -> None:
+    def _set_width_cols_total(self) -> None:
         """Sets total column space used."""
         self.width_cols_total = sum(self.width_per_col.values())
     
-    def set_non_col_space(self) -> None:
+    def _set_non_col_space(self) -> None:
         """Sets the total table width."""
         self.non_col_space = (       # Don't include end columns
             (self.num_cols * 2 - 2) * self.num_spaces + 
@@ -86,7 +86,7 @@ class Aux_TblInfo():
         )
 
 
-    def set_final_colwidths_dict(self) -> dict:
+    def _set_final_colwidths_dict(self) -> dict:
         """Returns dictionary with width for each columns
 
         Returns:
@@ -149,20 +149,20 @@ class Aux_TblInfo():
     ##########
     # Printing
     ##########
-    def c_print(self, *args) -> None:
+    def _print(self, *args) -> None:
         """Custom print w/ no separation/end chars."""
         print(*args, sep = '', end = '')
     
-    def print_col_delim(self) -> None:
+    def _print_col_delim(self) -> None:
         """Prints column delimiters: num_spaces, col_sep, num_spaces
         
         If no col_sep, prints num_spaces."""
         if len(self.col_sep) == 0:
-            self.c_print(self.num_spaces) * ' '
+            self._print(self.num_spaces) * ' '
         else:
-            self.c_print(self.num_spaces * ' ', self.col_sep, self.num_spaces * ' ')
+            self._print(self.num_spaces * ' ', self.col_sep, self.num_spaces * ' ')
     
-    def print_cell(self, val: str, col: str, left: bool = True, indent: bool = False):
+    def _print_cell(self, val: str, col: str, left: bool = True, indent: bool = False):
         """Print cell contents
 
         Args:
@@ -172,21 +172,21 @@ class Aux_TblInfo():
             indent (bool, optional): Print initial indent for row. Defaults to False.
         """
         if indent:
-            self.print_indent()
+            self._print_indent()
         if left:
-            self.c_print(val)
-            self.fill_space(val, col)
+            self._print(val)
+            self._fill_space(val, col)
         else:
-            self.fill_space(val, col)
-            self.c_print(val)
+            self._fill_space(val, col)
+            self._print(val)
 
 
-    def print_indent(self):
+    def _print_indent(self):
         """Prints table indent."""
-        self.c_print(self.indent * ' ')
+        self._print(self.indent * ' ')
 
 
-    def print_headers(self, custom_func: object = None) -> None:
+    def _print_headers(self, custom_func: object = None) -> None:
         """Prints headers. Can pass custom function to call on headers
 
         Args:
@@ -198,31 +198,31 @@ class Aux_TblInfo():
 
             left = True if i > 0 else False
             indent = True if i == 0 else False
-            self.print_cell(header, key, left = left, indent = indent)
+            self._print_cell(header, key, left = left, indent = indent)
 
             if i == len(self.tbl_keys) - 1:
                 print()     # newline
             else:
-                self.print_col_delim()
+                self._print_col_delim()
         return
     
 
-    def print_horizontal_line(self) -> None:
+    def _print_horizontal_line(self) -> None:
         """Prints horizontal lines on the table."""
         for k in self.tbl_keys:
             col_width = self.width_per_col[k]
 
             if k == self.records_key:
-                self.print_indent()
-            self.c_print( self.h_line * col_width)
+                self._print_indent()
+            self._print( self.h_line * col_width)
 
             if k == self.tbl_keys[-1]:
                 print()
             else:
-                self.print_col_delim()
+                self._print_col_delim()
     
     
-    def print_records(self) -> None:
+    def _print_records(self) -> None:
         """Prints table records for table.
         
         Aux functions:
@@ -238,11 +238,11 @@ class Aux_TblInfo():
                 ## If already printed.
                 if row_records[k][r] == -1:
                     indent = True if k == self.records_key else False
-                    self.print_cell('', k, indent= indent)
+                    self._print_cell('', k, indent= indent)
                     if k == self.tbl_keys[-1]:
                         print()
                     else:
-                        self.print_col_delim()
+                        self._print_col_delim()
                     continue
                 
                 ## Print cell
@@ -250,12 +250,12 @@ class Aux_TblInfo():
                 val = row_records[k][v][low:upp]
                 left = True if k != self.records_key else False
                 indent = True if k == self.records_key else False
-                self.print_cell(val, k, left, indent)
+                self._print_cell(val, k, left, indent)
 
                 if k == self.tbl_keys[-1]:
                     print()
                 else:
-                    self.print_col_delim()
+                    self._print_col_delim()
                     
                 ## Check done printing
                 if upp == len(row_records[k][v]):
@@ -294,7 +294,7 @@ class Aux_TblInfo():
     ##########
     # Spacing
     ##########
-    def fill_space(self, value: Union[int, str], col: str) -> None:
+    def _fill_space(self, value: Union[int, str], col: str) -> None:
         """Prints space to fill column according to value length and column length.
 
         Args:
@@ -302,6 +302,6 @@ class Aux_TblInfo():
             col (str): key to length of widths_per_col
         """
         col_len = self.width_per_col[col]
-        fill_space = col_len - len(str(value))
-        self.c_print(' ' * fill_space)
+        _fill_space = col_len - len(str(value))
+        self._print(' ' * _fill_space)
         return
