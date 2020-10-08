@@ -27,6 +27,7 @@ except ModuleNotFoundError:
 	from .custom_errors import TblEntryWarning
 	from .script_objects import Any, Iterator, Table, Union, UserDefinedClass
 
+
 ##########
 # TableInfo Class
 ##########
@@ -36,11 +37,12 @@ class TableInfo(Aux_TblInfo):
 	##########
 	# Init
 	##########
-	def __init__(self, tbl_keys: Union[dict, Iterator[Any]]):
+	def __init__(self, tbl_keys: Union[dict, Iterator[Any]], tbl_align: Union[dict, None] = None):
 		"""Initializes TableInfo objects with attributes based on TableInfo keys.
 
 		Args:
-			tbl_keys (Union[dict, Iterator[Any]]): List of attributes to create
+			tbl_keys (Union[dict, Iterator[Any]]): List of attr keys to store information in tbl.
+			tbl_align (Union[dict, None], optional): Alignment for markdown table. Defaults to None
 		
 		TODO: Test if passing dict.keys() works.
 		"""
@@ -54,6 +56,7 @@ class TableInfo(Aux_TblInfo):
 		self.records = 0
 		self.keys = tbl_keys
 		self.tbl_keys = [self.records_key] + tbl_keys
+		self.tbl_align = tbl_align if tbl_align else {k: 'l' for k in self.tbl_keys}
 
 		## Info for printing
 		self.num_cols = len(self.keys) + 1   # records col
@@ -183,6 +186,7 @@ class TableInfo(Aux_TblInfo):
 		v_lines: bool = True,
 		column_alignment: Union[dict, None] = {},
 		new_line: bool = True,
+		show_records_col: bool = True,
 		markdown: bool = False,
 		md_filename: str = None,
 	):
@@ -192,7 +196,7 @@ class TableInfo(Aux_TblInfo):
 			num_spaces (int, optional): Number of spaces b/w col separator. Defaults to 3.
 			v_lines (bool, optional): Print lines b/w columns. Defaults to True	.
 			column_alignment (Union[dict, None], optional): colname: (l,r,c) alignment. Defaults to None.
-			new_line (bool, optional): Print new line before table. Defaults to True.
+			show_records_column (bool, optional): If should show record number. Defaults to True
 			markdown (bool, optional): Instead of printing to console, APPEND to markdown file. Defaults to False.
 			md_filename (str, optional): markdown filename to append to. Defaults to None
 		
@@ -200,9 +204,12 @@ class TableInfo(Aux_TblInfo):
 			- Print methods used are stored in the Auxiliary methods module.
 		"""
 		## Table characters
-		if new_line: self._print('\n' * 2)
 		self.num_spaces = num_spaces
 		self.col_sep = self.col_sep if v_lines else ''
+
+		## Records column
+		if not show_records_col:
+			del self.tbl_keys[0]
 
 		## Checks markdown
 		self._markdown_on(markdown, md_filename)

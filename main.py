@@ -68,7 +68,7 @@ def main():
     
     markdown = True
     md_filename = 'test.md'
-    tbl.print_info(markdown= markdown, md_filename= md_filename, v_lines= False)
+    tbl.print_info(markdown= markdown, md_filename= md_filename, show_records_col= False)
     
     ## 5
     print(header, steps[5])

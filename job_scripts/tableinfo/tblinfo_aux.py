@@ -46,6 +46,10 @@ class Aux_TblInfo():
     markdown = False
     mdfile = None
 
+    align_l = 'l'
+    align_r = 'r'
+    md_aligns = {align_l:':--', align_r:'--:'}
+
 
     def __init__(self):
         """Attributes are instantiated in TblInfo() class."""
@@ -60,7 +64,7 @@ class Aux_TblInfo():
         self.num_spaces = 3
 
         ## markdown 
-        self.tbl_align = {k: 'l' for k in tbl_keys}
+        self.tbl_align = {k: self.align_l for k in self.tbl_keys}
 
 
     ##########
@@ -69,6 +73,7 @@ class Aux_TblInfo():
     def _set_width_attrs(self,) -> None:
         """Calls Width methods to set width attributes in class."""
         self._add_records_col_width()
+        self._set_md_widths()
         self._set_width_cols_total()
         self._set_non_col_space()
         self._set_final_colwidths_dict()
@@ -78,6 +83,15 @@ class Aux_TblInfo():
         widths = self.width_per_col
         widths[self.records_key] = len(str(self.records))
         self.width_per_col = widths
+    
+    def _set_md_widths(self) -> None:
+        """Sets column widths minimum of markdown alignment characters"""
+        if not self.markdown: return
+        for k, v in self.width_per_col.items():
+            col_align = self.tbl_align[k]
+            if v < len(self.md_aligns[col_align]):
+                self.width_per_col[k] = len(self.md_aligns[col_align])
+        return
 
     def _set_width_cols_total(self) -> None:
         """Sets total column space used."""
@@ -136,7 +150,7 @@ class Aux_TblInfo():
             return prop_col_width
 
 
-        ## get_col_width_dict() parent
+        ## Allowed
         allowed_width = os.get_terminal_size().columns * self.ALLOWED_TERM_WIDTH
         if (
         self.width_cols_total + self.non_col_space <= allowed_width
@@ -176,28 +190,32 @@ class Aux_TblInfo():
         else:
             self._print(self.num_spaces * ' ', self.col_sep, self.num_spaces * ' ')
     
-    def _print_cell(self, val: str, col: str, left: bool = True, indent: bool = False):
+    def _print_cell(self, val: str, col: str, indent: bool = False):
         """Print cell contents
 
         Args:
             val (str): Value in cell
             col (str): Column of printing
-            left (bool, optional): Print left aligned. Otherwise right aligned. Defaults to True.
             indent (bool, optional): Print initial indent for row. Defaults to False.
         """
         if indent:
             self._print_indent()
-        if left:
+
+        align = self.tbl_align[col]
+        if align == self.align_l:
             self._print(val)
             self._fill_space(val, col)
+        elif align == self.align_r:
+            self._fill_space(val, col)
+            self._print(val)
         else:
-            self._fill_space(val, col)
-            self._print(val)
+            Exception("Alignment not specified!")
 
 
     def _print_indent(self):
         """Prints table indent."""
-        self._print(self.indent * ' ')
+        if not self.markdown:
+            self._print(self.indent * ' ')
 
 
     def _print_headers(self, custom_func: object = None) -> None:
@@ -206,15 +224,13 @@ class Aux_TblInfo():
         Args:
             custom_func (object, optional): Func to format headers. Defaults to None.
         """
-        for i in range(len(self.tbl_keys)):
-            key = self.tbl_keys[i]
+        for key in self.tbl_keys:
             header = custom_func(key) if custom_func else key
 
-            left = True if i > 0 else False
-            indent = True if i == 0 else False
-            self._print_cell(header, key, left = left, indent = indent)
+            indent = True if key == self.records_key else False
+            self._print_cell(header, key, indent = indent)
 
-            if i == len(self.tbl_keys) - 1:
+            if key == self.tbl_keys[-1]:
                 self._print('\n')
             else:
                 self._print_col_delim()
@@ -223,15 +239,10 @@ class Aux_TblInfo():
 
     def _print_horizontal_line(self) -> None:
         """Prints horizontal lines on the table."""
-        def get_align(k: str):
+        def get_align_chars(k: str):
             """Returns chars to be used in each column if writing to .md, else returns self.hline"""
-            md_aligns = {
-                'l' :   ':--',
-                'c' :   ':--:',
-                'r' :   '--:'
-            }
             align = self.tbl_align[k]
-            return md_aligns[align]
+            return self.md_aligns[align]
             
 
         for k in self.tbl_keys:
@@ -242,9 +253,8 @@ class Aux_TblInfo():
             if not self.markdown:
                 self._print( self.h_line * col_width)
             else:
-                align = get_align(k)
-                self._print( align)
-                self._fill_space(align, k)
+                align_chars = get_align_chars(k)
+                self._print_cell( align_chars, k)
 
             if k == self.tbl_keys[-1]:
                 self._print('\n')
@@ -278,9 +288,8 @@ class Aux_TblInfo():
                 ## Print cell
                 low, upp = row_records[k][r]     ## Ranges
                 val = row_records[k][v][low:upp]
-                left = True if k != self.records_key else False
                 indent = True if k == self.records_key else False
-                self._print_cell(val, k, left, indent)
+                self._print_cell(val, k, indent)
 
                 if k == self.tbl_keys[-1]:
                     self._print('\n')
