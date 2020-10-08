@@ -2,7 +2,7 @@
  * @author [Jai Miles]
  * @email [jaimiles23@gmail.com]
  * @create date 2020-10-04 21:51:25
- * @modify date 2020-10-06 15:04:05
+ * @modify date 2020-10-07 20:38:12
  * @desc [
     Contains auxiliary methods for table class.
 
@@ -43,6 +43,8 @@ class Aux_TblInfo():
     indent = int((1 - ALLOWED_TERM_WIDTH) * 10)
     records_key = '#'
     h_line = '-'
+    markdown = False
+    mdfile = None
 
 
     def __init__(self):
@@ -104,7 +106,6 @@ class Aux_TblInfo():
                 will receive too small of a width. Instead, must pad columns after.
             """
             prop_width = int(allowed_width // (self.num_cols))
-            # print(col_width, tbl_prop, prop_width)
             
             if col_width < prop_width:
                 return col_width
@@ -151,7 +152,11 @@ class Aux_TblInfo():
     ##########
     def _print(self, *args) -> None:
         """Custom print w/ no separation/end chars."""
-        print(*args, sep = '', end = '')
+        if self.markdown:
+            self.mdfile.write(*args)
+        else:   
+            print(*args, sep = '', end = '') 
+
     
     def _print_col_delim(self) -> None:
         """Prints column delimiters: num_spaces, col_sep, num_spaces
@@ -201,7 +206,7 @@ class Aux_TblInfo():
             self._print_cell(header, key, left = left, indent = indent)
 
             if i == len(self.tbl_keys) - 1:
-                print()     # newline
+                self._print('\n')
             else:
                 self._print_col_delim()
         return
@@ -217,7 +222,7 @@ class Aux_TblInfo():
             self._print( self.h_line * col_width)
 
             if k == self.tbl_keys[-1]:
-                print()
+                self._print('\n')
             else:
                 self._print_col_delim()
     
@@ -240,7 +245,7 @@ class Aux_TblInfo():
                     indent = True if k == self.records_key else False
                     self._print_cell('', k, indent= indent)
                     if k == self.tbl_keys[-1]:
-                        print()
+                        self._print('\n')
                     else:
                         self._print_col_delim()
                     continue
@@ -253,7 +258,7 @@ class Aux_TblInfo():
                 self._print_cell(val, k, left, indent)
 
                 if k == self.tbl_keys[-1]:
-                    print()
+                    self._print('\n')
                 else:
                     self._print_col_delim()
                     
@@ -288,6 +293,8 @@ class Aux_TblInfo():
             num_printed = 0
             while num_printed != len(self.tbl_keys):
                 row_records, num_printed = print_row(row_records, num_printed)
+        
+        self._print('\n' * 2)
         return None
 
 
@@ -305,3 +312,26 @@ class Aux_TblInfo():
         _fill_space = col_len - len(str(value))
         self._print(' ' * _fill_space)
         return
+    
+
+    ##########
+    # Markdown
+    ##########
+
+    def _markdown_on(self, markdown: bool, md_filename: str):
+        """If markdown, sets up markdown attributes."""
+        self.markdown = False
+        if markdown:
+            if not md_filename:
+                raise Exception("Must pass `md_filename` to append table to.")
+            self.markdown = True
+            self.mdfile = open(md_filename, 'a')
+        return
+    
+    def _markdown_off(self, md_filename: str) -> None:
+        """If markdown, shutsdown markdown attributes."""
+        if not self.markdown: return
+
+        self.markdown = False
+        self.mdfile.close()
+

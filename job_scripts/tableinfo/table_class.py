@@ -184,7 +184,9 @@ class TableInfo(Aux_TblInfo):
 		col_sep: str = '|', 
 		v_lines: bool = True,
 		column_alignment: Union[dict, None] = {},
-		new_line: bool = True
+		new_line: bool = True,
+		markdown: str = False,
+		md_filename: str = None,
 	):
 		"""Prints information stored in the table.
 
@@ -195,6 +197,8 @@ class TableInfo(Aux_TblInfo):
 			v_lines (bool, optional): Print lines b/w columns. Defaults to True	.
 			column_alignment (Union[dict, None], optional): colname: (l,r,c) alignment. Defaults to None.
 			new_line (bool, optional): Print new line before table. Defaults to True.
+			markdown (bool, optional): Instead of printing to console, APPEND to markdown file. Defaults to False.
+			md_filename (str, optional): markdown filename to append to. Defaults to None
 		
 		Note:
 			- Print methods used are stored in the Auxiliary methods module.
@@ -203,6 +207,9 @@ class TableInfo(Aux_TblInfo):
 		if new_line: print()
 		self.num_spaces = num_spaces
 		self.col_sep = col_sep if v_lines else ''
+
+		## Checks markdown
+		self._markdown_on(markdown, md_filename)
 		
 		## Table Widths & Heights
 		self._set_width_attrs()
@@ -211,4 +218,5 @@ class TableInfo(Aux_TblInfo):
 		self._print_headers()
 		self._print_horizontal_line()
 		self._print_records()
-		print('\n' * 2, end = '')
+
+		self._markdown_off(md_filename)
