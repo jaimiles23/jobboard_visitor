@@ -66,7 +66,9 @@ def main():
         jobboard.open_websites()
         tbl.add_entry(jobboard, user_object=True)
     
-    tbl.print_info()
+    markdown = True
+    md_filename = 'test'
+    tbl.print_info(markdown= markdown, md_filename= md_filename)
     
     ## 5
     print(header, steps[5])

@@ -185,7 +185,7 @@ class TableInfo(Aux_TblInfo):
 		v_lines: bool = True,
 		column_alignment: Union[dict, None] = {},
 		new_line: bool = True,
-		markdown: str = False,
+		markdown: bool = False,
 		md_filename: str = None,
 	):
 		"""Prints information stored in the table.
@@ -204,7 +204,7 @@ class TableInfo(Aux_TblInfo):
 			- Print methods used are stored in the Auxiliary methods module.
 		"""
 		## Table characters
-		if new_line: print()
+		if new_line: self._print('\n' * 2)
 		self.num_spaces = num_spaces
 		self.col_sep = col_sep if v_lines else ''
 

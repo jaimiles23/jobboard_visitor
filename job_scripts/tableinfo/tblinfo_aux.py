@@ -152,10 +152,11 @@ class Aux_TblInfo():
     ##########
     def _print(self, *args) -> None:
         """Custom print w/ no separation/end chars."""
+        text = ''.join(args)
         if self.markdown:
-            self.mdfile.write(*args)
+            self.mdfile.write(text)
         else:   
-            print(*args, sep = '', end = '') 
+            print(text, sep = '', end = '') 
 
     
     def _print_col_delim(self) -> None:
