@@ -13,6 +13,7 @@
     - [Update jobboards](#update-jobboards)
     - [Change Constants](#change-constants)
     - [Batch script](#batch-script)
+  - [TODO](#todo)
 
 ---
 
@@ -23,16 +24,22 @@ This program facilitates job searching by systematically opening job boards from
 ## Motivation
 
 ### Progressive Careers
-I initially created this program to accomodate my specific career interests; I want to contribute my interdisciplinary experience in program evaluation and technology to a progressive organization. This means that I am interested in a "progressive data" career, such as data analytics with an NGO, non-profit, or other socially progressive organization.
+I initially created this program to accomodate my specific career interests; I want to contribute my interdisciplinary experience in program evaluation and technology to a progressive organization. This means that I am interested in a *progressive data* career where I use data to help others, e.g., data analytics with a non-profit.
 
-It can be challenging to find progressive data jobs on well-established job boards like Indeed, Glassdoor, and Monster.com. Socially-motivated organizations often post listings on specialized job boards in order to reach specific audiences defined by their interest and qualifications. While this hiring strategy makes sense at an organizational level, it creates obstacles for early-mid level career job-seekers who are not yet married to a single career. Job seekers today are normalized to one-stop shop jobboards that accomodate their career interests. I created this program to systematically check progressive jobboards and to help me find "the right one, eventually."
+It can be challenging to find progressive data jobs on well-established job boards like Indeed, Glassdoor, and Monster.com. Socially-motivated organizations will post their opportunities on their own internal site or various progressive jobboards. For example:
+- [Idealist](https://www.idealist.org/)
+- [Humentum](https://jobs.humentum.org/)
+- [National Non-Profits](https://nationalnonprofits.org/)
+
+ While this hiring strategy makes sense at an organizational level, it creates obstacles for early-mid level career job-seekers who are not yet married to a single career. Job seekers today are normalized to one-stop shop jobboards that accomodate their career interests. I created this program to systematically check progressive jobboards/organizations to help me find "the right one, eventually."
 
 ![](https://i.imgur.com/JH9jQki.jpg)
 
 
 ### Job Searching: The Life Long Adventure
 
-Additionally, I want to acknowledge job searching as a life-long adventure. Fewer and fewer people stay with the same organization their whole life. This is especialy true in technological roles, where it's common for people to switch jobs every 2-3 years to seek new skills, different responsibilities, and better compensation. As such, any automation pertaining to job searching is likely to pay dividends over time. In later career seeking, I may be interested to automate job searching on a single site, as demonstrated [here](https://realpython.com/beautiful-soup-web-scraper-python/).
+Additionally, I want to acknowledge job searching as a life-long adventure. Fewer and fewer people stay with the same organization their whole life. <!-- This is especialy true in technological roles, where it's often encouraged for people to switch jobs every 3-4 years to seek new skills, different responsibilities, and better compensation.  -->As such, any automation pertaining to job searching is likely to pay dividends over time. In later career seeking, I may be interested to automate job searching on a single site, as demonstrated [here](https://realpython.com/beautiful-soup-web-scraper-python/).
+
 
 
 ### Re-visiting Organizations
@@ -129,3 +136,10 @@ To add the .bat file to your system path:
 Now, you can type "jobs" into your start menu and run the batch file!
 
 ![](https://imgur.com/jwWRIa5.png)
+
+
+## TODO
+- [ ] Create separate file on how to use & create batch script with link to Readme
+- [ ] Create MD table of current organizations 
+  - [ ] May be interested to explore creating a map with geographic location of these opportunities (US only?)
+- [ ] Complete jobboard printing & test with MD print 
