@@ -44,7 +44,7 @@ Additionally, I want to acknowledge job searching as a life-long adventure. Fewe
 
 ### Re-visiting Organizations
 
-Looking for jobs is an enlightening process; it's likely thaht you will discover organizations that don't have a position available for you. For instance, I am interested in monitoring & evaluation positions with USAID. This program can be used to systematically check USAID and other organizations for available career options.
+Looking for jobs is an enlightening process; it's likely you will fall in love with an organization that don't have a position available for you. For instance, I am interested in monitoring & evaluation positions with USAID. This program can be used to systematically check USAID and other organizations for available career options.
 
 
 ## How to use
