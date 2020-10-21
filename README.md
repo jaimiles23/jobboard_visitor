@@ -61,7 +61,7 @@ This program uses the pandas library to access and modify `jobboard_info.xlsx`.
 ```
 python -m pip install -r requirements.txt
 ```
-I do *not* recommend using a virtual environment for installing requirements. All users should have some version of pandas available on their standard python interpreter.
+<!-- I do *not* recommend using a virtual environment for installing requirements. All users should have some version of pandas available on their standard python interpreter. -->
 
 
 ### Update jobboards
