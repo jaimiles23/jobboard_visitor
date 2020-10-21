@@ -33,6 +33,7 @@ try:
 except ModuleNotFoundError:
     from .script_objects import Union, Tuple
 
+
 ##########
 # Auxiliary methods for the TableInfo class
 ##########
@@ -68,6 +69,9 @@ class Aux_TblInfo():
 
         ## markdown 
         self.col_alignment = {k: self.align_l for k in self.tbl_keys}
+
+        ## Records col
+        self.show_records = True
 
 
     ##########
@@ -183,6 +187,19 @@ class Aux_TblInfo():
         else:   
             print(text, sep = '', end = '') 
 
+
+    def _print_col_boundary(self, key: str) -> None:
+        """Prints column boundary. If last key, prints new line.
+
+        Args:
+            key (str): Column key
+        """
+        if key == self.tbl_keys[-1]:
+            self._print('\n')
+        else:
+            self._print_col_delim()
+
+
     
     def _print_col_delim(self) -> None:
         """Prints column delimiters: num_spaces, col_sep, num_spaces
@@ -213,30 +230,26 @@ class Aux_TblInfo():
             self._print(val)
         else:
             Exception("Alignment not specified!")
+        
+        self._print_col_boundary(col)
 
 
     def _print_indent(self):
         """Prints table indent."""
-        if not self.markdown:
-            self._print(self.indent * ' ')
+        if self.markdown:
+            return
+        self._print(self.indent * ' ')
 
 
-    def _print_headers(self, custom_func: object = None) -> None:
-        """Prints headers. Can pass custom function to call on headers
-
-        Args:
-            custom_func (object, optional): Func to format headers. Defaults to None.
-        """
+    def _print_headers(self) -> None:
+        """Prints headers."""
         for key in self.tbl_keys:
-            header = custom_func(key) if custom_func else key
+            if key == self.records_key and not self.show_records:
+                continue
 
             indent = True if key == self.records_key else False
-            self._print_cell(header, key, indent = indent)
+            self._print_cell(key, key, indent = indent)
 
-            if key == self.tbl_keys[-1]:
-                self._print('\n')
-            else:
-                self._print_col_delim()
         return
     
 
@@ -246,23 +259,22 @@ class Aux_TblInfo():
             """Returns chars to be used in each column if writing to .md, else returns self.hline"""
             align = self.col_alignment[k]
             return self.md_aligns[align]
-            
+        
 
-        for k in self.tbl_keys:
-            col_width = self.width_per_col[k]
+        for key in self.tbl_keys:
+            col_width = self.width_per_col[key]
 
-            if k == self.records_key: self._print_indent()
+            if key == self.records_key and not self.show_records:
+                continue
+            elif key == self.records_key:
+                self._print_indent()
 
             if not self.markdown:
                 self._print( self.h_line * col_width)
+                self._print_col_boundary(key)
             else:
-                align_chars = get_align_chars(k)
-                self._print_cell( align_chars, k)
-
-            if k == self.tbl_keys[-1]:
-                self._print('\n')
-            else:
-                self._print_col_delim()
+                align_chars = get_align_chars(key)
+                self._print_cell( align_chars, key)
     
     
     def _print_records(self) -> None:
@@ -277,41 +289,35 @@ class Aux_TblInfo():
         """
         def print_row(row_records: dict, num_printed: int) -> Tuple[ dict, int]:
             """Prints values for rows without extending outside column."""
-            for k in self.tbl_keys:
-                ## If already printed.
-                if row_records[k][r] == -1:
-                    indent = True if k == self.records_key else False
-                    self._print_cell('', k, indent= indent)
-                    if k == self.tbl_keys[-1]:
-                        self._print('\n')
-                    else:
-                        self._print_col_delim()
+            for key in self.tbl_keys:
+                indent = True if key == self.records_key else False
+
+                if key == self.records_key and not self.show_records:
+                    continue
+                elif row_records[key][r] == -1:     # Check print empty cell
+                    self._print_cell('', key, indent= indent)
                     continue
                 
                 ## Print cell
-                low, upp = row_records[k][r]     ## Ranges
-                val = row_records[k][v][low:upp]
-                indent = True if k == self.records_key else False
-                self._print_cell(val, k, indent)
+                low, upp = row_records[key][r]     ## Ranges
+                val = row_records[key][v][low:upp]
+                indent = True if (key == self.records_key) else False
 
-                if k == self.tbl_keys[-1]:
-                    self._print('\n')
-                else:
-                    self._print_col_delim()
+                self._print_cell(val, key, indent)
                     
                 ## Check done printing
-                if upp == len(row_records[k][v]):
+                if upp == len(row_records[key][v]):
                     num_printed += 1
-                    row_records[k][r] = -1
+                    row_records[key][r] = -1
                     continue
                 
                 ## Update range
                 low = upp
-                if (upp + self.width_per_col[k]) < len(row_records[k][v]):
-                    upp = upp + self.width_per_col[k]
+                if (upp + self.width_per_col[key]) < len(row_records[key][v]):
+                    upp = upp + self.width_per_col[key]
                 else:
-                    upp = len(row_records[k][v])
-                row_records[k][r] = (low, upp)
+                    upp = len(row_records[key][v])
+                row_records[key][r] = (low, upp)
             return row_records, num_printed
 
 
@@ -321,13 +327,13 @@ class Aux_TblInfo():
             row_records = {k : {} for k in self.tbl_keys}
 
             # get records for row
-            for k in self.tbl_keys:     
-                val = str(i + 1) if (k == self.records_key) else str(getattr(self, k)[i])
-                upp = len(val) if len(val) <= self.width_per_col[k] else self.width_per_col[k]
-                row_records[k][v], row_records[k][r] = val, (0, upp)
+            for key in self.tbl_keys:     
+                val = str(i + 1) if (key == self.records_key) else str(getattr(self, key)[i])
+                upp = len(val) if len(val) <= self.width_per_col[key] else self.width_per_col[key]
+                row_records[key][v], row_records[key][r] = val, (0, upp)
             
             # print row
-            num_printed = 0
+            num_printed = 0 if self.show_records else 1
             while num_printed != len(self.tbl_keys):
                 row_records, num_printed = print_row(row_records, num_printed)
         
@@ -371,7 +377,8 @@ class Aux_TblInfo():
 
         self.markdown = False
         self.mdfile.close()
-    
+
+
     ##########
     # Alignment
     ##########

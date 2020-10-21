@@ -11,7 +11,6 @@
  */
 """
 
-
 ##########
 # Imports
 ##########
@@ -67,13 +66,14 @@ def main():
         tbl.add_entry(jobboard, user_object=True)
     
     markdown = True
+    show_records = True
+    guess_align = True
     md_filename = 'test.md'
-    tbl.print_info(markdown= markdown, md_filename= md_filename, show_records_col= False, guess_alignment=True)
+    tbl.print_info(markdown= markdown, md_filename= md_filename, show_records_col= show_records, guess_alignment=guess_align)
     
     ## 5
     print(header, steps[5])
     QueueMethods.save_queue( JobBoard.job_queue, JobBoard.used_jobsites)
-
 
 
 ## Main

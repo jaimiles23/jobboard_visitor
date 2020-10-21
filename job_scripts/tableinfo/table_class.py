@@ -214,9 +214,7 @@ class TableInfo(Aux_TblInfo):
 		self.col_alignment = column_alignment if column_alignment else self.col_alignment
 
 		## Records column
-		if not show_records_col:
-			del self.tbl_keys[0]
-			del self.col_alignment[self.records_key]
+		self.show_records = show_records_col
 		
 		## Check alignment
 		if guess_alignment and not column_alignment:
@@ -225,9 +223,8 @@ class TableInfo(Aux_TblInfo):
 		## Checks markdown
 		self._markdown_on(markdown, md_filename)
 		
-		## Table Widths & Heights
+		## Table Widths
 		self._set_width_attrs()
-		# self.set_row_heights()
 		
 		self._print_headers()
 		self._print_horizontal_line()
