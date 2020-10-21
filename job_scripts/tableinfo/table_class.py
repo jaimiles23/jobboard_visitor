@@ -222,6 +222,8 @@ class TableInfo(Aux_TblInfo):
 
 		## Checks markdown
 		self._markdown_on(markdown, md_filename)
+		if not self.markdown:
+			print('\n' * 1)	# space @ beginning
 		
 		## Table Widths
 		self._set_width_attrs()

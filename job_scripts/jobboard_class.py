@@ -59,6 +59,13 @@ class JobBoard(object):
             print(f"- Opened {cls.sites_opened} / {cls.max_sites_opened}")
         JobBoard.flag_show_opened_max_sites = True
         return
+    
+
+    @classmethod
+    def print_num_opened_sites(cls) -> None:
+        """Prints message that opened x sites."""
+        message = f"\t- Opened {cls.sites_opened} sites"
+        print(message)
 
 
     ##########
@@ -170,9 +177,8 @@ class JobBoard(object):
 
         if self.flag_opened:
             for url in self.urls: 
-                pass 
-                # webbrowser.open(url)  
-                # self.print_queue_info(self.flag_opened)
+                # webbrowser.open(url)
+                pass
             
         if self.flag_opened:
             JobBoard.used_jobsites.append( (self.Q_index, self.ident))

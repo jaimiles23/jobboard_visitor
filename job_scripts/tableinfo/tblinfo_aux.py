@@ -199,7 +199,6 @@ class Aux_TblInfo():
         else:
             self._print_col_delim()
 
-
     
     def _print_col_delim(self) -> None:
         """Prints column delimiters: num_spaces, col_sep, num_spaces

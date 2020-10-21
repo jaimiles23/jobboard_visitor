@@ -70,6 +70,8 @@ def main():
     guess_align = True
     md_filename = 'test.md'
     tbl.print_info(markdown= markdown, md_filename= md_filename, show_records_col= show_records, guess_alignment=guess_align)
+
+    JobBoard.print_num_opened_sites()
     
     ## 5
     print(header, steps[5])

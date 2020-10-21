@@ -26,7 +26,7 @@ This program facilitates job searching by systematically opening job boards from
 ### Progressive Careers
 I initially created this program to accomodate my specific career interests; I want to contribute my interdisciplinary experience in program evaluation and technology to a progressive organization. This means that I am interested in a *progressive data* career where I use data to help others, e.g., data analytics with a non-profit.
 
-It can be challenging to find progressive data jobs on well-established job boards like Indeed, Glassdoor, and Monster.com. Socially-motivated organizations will post their opportunities on their own internal site or various progressive jobboards. For example:
+It can be challenging to find progressive data jobs on well-established job boards like Indeed, Glassdoor, and Monster.com. Socially-motivated organizations will post their opportunities on various progressive jobboards or their own internal site. For example:
 - [Idealist](https://www.idealist.org/)
 - [Humentum](https://jobs.humentum.org/)
 - [National Non-Profits](https://nationalnonprofits.org/)
