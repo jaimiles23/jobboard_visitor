@@ -133,9 +133,9 @@ To add the .bat file to your system path:
 
 **Use the batch script**
 
-Now, you can type "jobs" into your start menu and run the batch file!
+Now, you can type "jobs" into your start menu and run the batch file. Alternatively, you can use the 'win' + 'r' shortcut to open the Run Dialog box. This allows you to input alternative options into the script.
 
-![](https://imgur.com/jwWRIa5.png)
+![](https://i.imgur.com/GWfXXwk.png)
 
 
 ## TODO
