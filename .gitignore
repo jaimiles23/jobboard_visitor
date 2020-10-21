@@ -1,6 +1,7 @@
 # Custom
 test.md
 *.pkl
+*pkl
 .vscode
 
 
