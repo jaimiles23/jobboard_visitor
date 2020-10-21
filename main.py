@@ -15,6 +15,7 @@
 # Imports
 ##########
 
+import sys
 import pandas as pd
 
 from job_scripts import (constants, custom_errors, df_methods,
@@ -44,6 +45,15 @@ def main():
         5   :   "Save New Job Queue"
     }
     header = '>' * 3
+
+    ## Sys args
+    """
+    Allows user to pass arguments with 
+    """
+    options = sys.argv[1:]
+    for o in options:
+        JobBoard.__setattr__(o, True)
+
     
     ## 1
     print(header, steps[1])
@@ -65,11 +75,9 @@ def main():
         jobboard.open_websites()
         tbl.add_entry(jobboard, user_object=True)
     
-    markdown = True
-    show_records = True
-    guess_align = True
-    md_filename = 'test.md'
-    tbl.print_info(markdown= markdown, md_filename= md_filename, show_records_col= show_records, guess_alignment=guess_align)
+    markdown = False
+    md_filename = r"C:\Users\Jai\Documents\github\job_visitor\test.md"
+    tbl.print_info(markdown= markdown, md_filename= md_filename, show_records_col= False)
 
     JobBoard.print_num_opened_sites()
     
