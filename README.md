@@ -24,14 +24,12 @@ This program facilitates job searching by systematically opening job boards from
 ## Motivation
 
 ### Progressive Careers
-I initially created this program to accomodate my specific career interests; I want to contribute my interdisciplinary experience in program evaluation and technology to a progressive organization. This means that I am interested in a *progressive data* career where I use data to help others, e.g., data analytics with a non-profit.
-
-It can be challenging to find progressive data jobs on well-established job boards like Indeed, Glassdoor, and Monster.com. Socially-motivated organizations will post their opportunities on various progressive jobboards or their own internal site. For example:
+I initially created this program to accomodate my specific career interest to work in a progressive data capacity; I want to contribute my interdisciplinary experience in research and technology to empower others. This may entail a career in consulting, program evaluation, or progressive data analytics. It can be challenging to find this interest on well-established job boards like Indeed, Glassdoor, and Monster.com. Socially-motivated organizations will post their opportunities on various progressive jobboards or their own internal site. For example:
 - [Idealist](https://www.idealist.org/)
 - [Humentum](https://jobs.humentum.org/)
 - [National Non-Profits](https://nationalnonprofits.org/)
 
- While this hiring strategy makes sense at an organizational level, it creates obstacles for early-mid level career job-seekers who are not yet married to a single career. Job seekers today are normalized to one-stop shop jobboards that accomodate their career interests. I created this program to systematically check progressive jobboards/organizations to help me find "the right one, eventually."
+While this hiring strategy makes sense at an organizational level, it creates obstacles for early-mid level career job-seekers who are not yet married to a single career. Job seekers today are normalized to one-stop shop jobboards that accomodate their career interests. I created this program to systematically check progressive jobboards/organizations to help me find "the right one, eventually."
 
 ![](https://i.imgur.com/JH9jQki.jpg)
 
