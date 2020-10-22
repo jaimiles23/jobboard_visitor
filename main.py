@@ -76,7 +76,8 @@ def main():
         4   :   "Sort Jobboards to Match Queue",
         5   :   "Open Jobboards in Queue",
         6   :   "Print results & write to table.",
-        7   :   "Save New Job Queue",
+        7   :   "Save to MarkDown file.",
+        8   :   "Save New Job Queue",
     }
     header = '>' * 3
 
@@ -113,29 +114,34 @@ def main():
 
     ## Create Table objects to store attr info
     tbl_print = TableInfo( JobBoard.attrs_to_print)
-    tbl_md = TableInfo( JobBoard.attrs_for_md)
-
+    
     ## Open sites
     for jobboard in all_jobboards:
         jobboard.open_websites(option_jobboardattr)
         tbl_print.add_entry(jobboard, user_object=True)
-        tbl_md.add_entry(jobboard, user_object=True)
+        
     
-
     ## 6
     print(header, steps[6])
 
     tbl_print.print_info(show_records_col= False)
     JobBoard.print_num_opened_sites()
 
+    ## 7
+    print(header, steps[7])
+    tbl_md = TableInfo( JobBoard.attrs_for_md)
+
+    all_jobboards = sorted(all_jobboards, key = lambda x: x.name)
+    for jobboard in all_jobboards:
+        tbl_md.add_entry(jobboard, user_object=True)
+
     tbl_md.print_info(
         markdown= True,
         md_filename= constants.FILENAME_MD
     )
-    
 
-    ## 7
-    print(header, steps[7])
+    ## 8
+    print(header, steps[8])
     QueueMethods.save_queue( JobBoard.job_queue, JobBoard.used_jobsites)
 
 
