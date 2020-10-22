@@ -100,10 +100,10 @@ The `constants.py` script contains constants in the script.
 The first constant to change is the `FILENAME_JOBSITES`, which is located at the top of the script. Replace this string with the absolute path to `jobboard_info.xlsx`. Keep the 'r' prefix to process it as a raw string.
 
 **Change number of jobboards to open**
-This script limits the number of jobboards to process with the `MAX_SITES_OPENED` constant. The script will not process more than `MAX_SITES_OPENED` rows in the CSV.
+This script limits the number of jobboards to process with the `MAX_SITES_TO_OPEN` constant. The script will not process more than `MAX_SITES_TO_OPEN` rows in the CSV.
 
 **How to open all jobboards**
-To open all jobboards in `jobboard_info.xlsx`, change the `queue_priority` variable of all to `1`, and change `MAX_SITES_OPENED = float('inf')` in `constants.py`
+To open all jobboards in `jobboard_info.xlsx`, change the `queue_priority` variable of all to `1`, and change `MAX_SITES_TO_OPEN = float('inf')` in `constants.py`
 
 
 ### Batch script
