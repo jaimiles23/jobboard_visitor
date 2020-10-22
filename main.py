@@ -101,12 +101,15 @@ def main():
     ## 5
     print(header, steps[5])
 
-    ## Number of sites to open
+    ## Check if provided numbers of sites to open.
     num_to_open = constants.MAX_SITES_TO_OPEN
     for a in sys.argv:
-        if isinstance(a, int):
-            num_to_open = a
+        try:
+            num_to_open = int(a)
+        except:
+            pass
     JobBoard.MAX_SITES_TO_OPEN = num_to_open
+
 
     ## Create Table objects to store attr info
     tbl_print = TableInfo( JobBoard.attrs_to_print)
