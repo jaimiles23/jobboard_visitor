@@ -23,6 +23,7 @@ from job_scripts import (constants, custom_errors, df_methods,
 from job_scripts.queue_methods import QueueMethods
 from job_scripts.jobboard_class import JobBoard
 from job_scripts.tableinfo import TableInfo
+from job_scripts.script_objects import Tuple
 
 
 ##########
@@ -32,11 +33,40 @@ from job_scripts.tableinfo import TableInfo
 def main():
     """
     Opens jobsite URLS.
-		1. Load and clean jobsite jobsite data frame
-		2. Creates jobsite instances from dataframe
-        3. Opens jobsites
-        4. Save new job queue
+        1. Manage jobboard attr options
+		2. Load and clean jobsite jobsite data frame
+		3. Creates jobsite instances from dataframe
+        4. Opens jobsites
+        5. Save new job queue
 	"""
+    ##### System Arguments
+    """
+    Allows users to pass options through the Run Dialog box (win + r).
+        - boards: shows jobboards
+        - orgs: shows organizations
+    
+    NOTE:
+    option_jobboardattr = class attr, instance attr
+    """
+    option_jobboardattr : Tuple[ Tuple[ str, str]] = (
+        ("boards", "jobboard"),
+        ("orgs", "organization"),
+    )
+    available_options = [option[0] for option in option_jobboardattr]
+    options = {key: True for key in sys.argv if key in available_options}
+
+    if len(options.keys()) > 0:
+        for o in available_options:
+            if o not in options:
+                options[o] = False
+    else:
+        options = {key: True for key in available_options}
+    print(options)
+    for k, v in options.items():
+        setattr(JobBoard, k, v)
+
+
+    ##### Steps conducted
     steps = {
         1   :   "Load & Clean JobSite Dataframe",
         2   :   "Create JobSite Instances from Dataframe",
@@ -47,31 +77,6 @@ def main():
     header = '>' * 3
 
 
-    ## Sys args
-    """
-    Allows user to pass arguments to change websites opened and output:
-        - jobboards: shows jobboards
-        - orgs: shows organizations
-    
-    NOTE: Values hard coded in Jobboard.open_websites()
-    Must change values there too
-    """
-    available_options = (
-        "board",
-        "orgs",
-    )
-
-    options = {key: True for key in sys.argv if key in available_options}
-    if len(options.keys()):
-        for o in available_options:
-            if o not in options:
-                options[o] = False
-    else:
-        options = {key: True for key in available_options}
-    print(options)
-    for k, v in options.items():
-        setattr(JobBoard, k, v)
-    
     ## 1
     print(header, steps[1])
     df_jobsites = df_methods.get_df_jobboards()
@@ -89,7 +94,7 @@ def main():
 
     tbl = TableInfo( JobBoard.attrs_to_print)
     for jobboard in all_jobboards:
-        jobboard.open_websites()
+        jobboard.open_websites(option_jobboardattr)
         tbl.add_entry(jobboard, user_object=True)
     
     markdown = False

@@ -7,7 +7,7 @@
     Contains job site class to contain job information
 
     TODO:
-    - Consider making jobsite class methods inherited from an aux object.
+    - Consider making jobsite class methods inherited from an auxiliary object.
  ]
  */
 """
@@ -35,7 +35,7 @@ class JobBoard(object):
     flag_cleaned_queue = False
     used_jobsites = list()
 
-    max_sites_opened = constants.MAX_SITES_OPENED
+    MAX_SITES_TO_OPEN = constants.MAX_SITES_TO_OPEN
     sites_opened = 0
     flag_show_opened_max_sites = True
 
@@ -56,7 +56,7 @@ class JobBoard(object):
         Changes flag_show_opened_max_sites to false.
         """
         if not JobBoard.flag_show_opened_max_sites:
-            print(f"- Opened {cls.sites_opened} / {cls.max_sites_opened}")
+            print(f"- Opened {cls.sites_opened} / {cls.MAX_SITES_TO_OPEN}")
         JobBoard.flag_show_opened_max_sites = True
         return
     
@@ -66,11 +66,6 @@ class JobBoard(object):
         """Prints message that opened x sites."""
         message = f"\t- Opened {cls.sites_opened} sites"
         print(message)
-
-
-    ##########
-    # Website open options
-    ##########
 
 
     ##########
@@ -145,47 +140,59 @@ class JobBoard(object):
         return index
 
 
-    def set_checked_jobs_in_Q(self) -> None:
+    def set_checked_jobs_in_Q(self, option_jobboardattr: Tuple[ Tuple[ str, str]]) -> None:
         """sets how many items were checks first in queue for this JobBoard."""
+        for option_set in option_jobboardattr:  
+            c_attr, _ = option_set
+            if getattr(self, c_attr) == False:      # if an option is passed, search whole queue.
+                self.checked_jobs_in_Q = len( self.job_queue)
+                return
+
         self.checked_jobs_in_Q = math.ceil(len( self.job_queue) / self.Q_priority)
         return
 
 
-    def set_flag_opened(self) -> bool:
+    def set_flag_opened(self, option_jobboardattr: Tuple) -> bool:
         """Returns self.flag_opened to determine if url should be opened.
         """
-        flag_opened = (
-            (JobBoard.max_sites_opened > JobBoard.sites_opened) and
-            (self.Q_index <= self.checked_jobs_in_Q)
-        )
+        flag_opened = True
+
+        for tup in option_jobboardattr:     # check if options were set for opening
+            c_attr, i_attr = tup
+            if getattr(self, c_attr) == False and getattr(self, i_attr):
+                flag_opened = False
+
+        if self.Q_index > self.checked_jobs_in_Q:
+            flag_opened = False
+        elif JobBoard.MAX_SITES_TO_OPEN < JobBoard.sites_opened + len(self.urls):
+            flag_opened = False
+            
         if flag_opened:
-            JobBoard.sites_opened += 1
+            JobBoard.sites_opened += len(self.urls)
         self.flag_opened = flag_opened
         return
     
 
-    def open_websites(self) -> None:
-        """Opens the website if self.flag_opened.
-        
+    def open_websites(self, option_jobboardattr: Tuple[ Tuple[ str, str]]) -> None:
+        """Opens the website if self.flag_opened. 
         Appends tuple of index & id to used_jobsites to change queue later.
-        """
-        self.set_checked_jobs_in_Q()
 
-        if JobBoard.sites_opened == JobBoard.max_sites_opened:
+        Args:
+            option_jobboardattr (Tuple[ class attr, instance attr): Handles options
+        """
+        self.set_checked_jobs_in_Q(option_jobboardattr)
+
+        if JobBoard.sites_opened == JobBoard.MAX_SITES_TO_OPEN:
             JobBoard.print_opened_all_sites()
             return
-        elif JobBoard.sites_opened + len(self.urls) > JobBoard.max_sites_opened:
+        elif JobBoard.sites_opened + len(self.urls) > JobBoard.MAX_SITES_TO_OPEN:
             self.checked_jobs_in_Q = "too many sites."
             return
         
-        self.set_flag_opened()
+        self.set_flag_opened(option_jobboardattr)
 
         if self.flag_opened:
             for url in self.urls: 
-                if (
-                    (self.jobboard and getattr(self, "board")) or
-                    (self.organization and getattr(self, "orgs"))
-                ):
                     webbrowser.open(url)
             
         if self.flag_opened:
