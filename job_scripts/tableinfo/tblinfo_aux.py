@@ -48,6 +48,7 @@ class Aux_TblInfo():
     ## markdown constants
     markdown = False
     mdfile = None
+    writemode = 'w'
 
     ## Alignment constants
     align_l = 'l'
@@ -367,7 +368,7 @@ class Aux_TblInfo():
             if not md_filename:
                 raise Exception("Must pass `md_filename` to append table to.")
             self.markdown = True
-            self.mdfile = open(md_filename, 'a')
+            self.mdfile = open(md_filename, self.writemode)
         return
     
     def _markdown_off(self, md_filename: str) -> None:

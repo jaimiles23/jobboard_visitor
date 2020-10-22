@@ -13,6 +13,7 @@
 ##########
 
 FILENAME_JOBBOARDS = r"C:\Users\Jai\Documents\github\job_visitor\jobboard_info.xlsx"
+FILENAME_MD = r"C:\Users\Jai\Documents\github\job_visitor\Jobboards.md"
 SHEETNAMES = (
 	"job_sites",
 	"country",
@@ -26,7 +27,7 @@ DELIMITER_URL = '\n'
 ##########
 # JobSite 
 ##########
-MAX_SITES_TO_OPEN = 4
+MAX_SITES_TO_OPEN = 5
 
 
 ##########

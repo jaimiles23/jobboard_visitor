@@ -191,6 +191,7 @@ class TableInfo(Aux_TblInfo):
 		
 		markdown: bool = False,
 		md_filename: str = None,
+		write_type: str = 'w',
 	):
 		"""Prints information stored in the table.
 
@@ -202,8 +203,9 @@ class TableInfo(Aux_TblInfo):
 			column_alignment (Union[dict, None], optional): colname: (l,r,c) alignment. Defaults to None.
 			guess_alignment (bool): Autoassigns the column alignment by parsing the column.
 			
-			markdown (bool, optional): Instead of printing to console, APPEND to markdown file. Defaults to False.
+			markdown (bool, optional): Instead of printing to console, writes to markdown file. Defaults to False.
 			md_filename (str, optional): markdown filename to append to. Defaults to None
+			write_type (str, optional): How to write to file - write or append. Defaults to 'ws'.
 		
 		Note:
 			- Print methods used are stored in the Auxiliary methods module.
@@ -224,6 +226,8 @@ class TableInfo(Aux_TblInfo):
 		self._markdown_on(markdown, md_filename)
 		if not self.markdown:
 			print('\n' * 1)	# space @ beginning
+		else:
+			self.writemode = write_type
 		
 		## Table Widths
 		self._set_width_attrs()

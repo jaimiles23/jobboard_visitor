@@ -43,11 +43,13 @@ class JobBoard(object):
         'ident',
         'name',
         'flag_opened',
-        'num_sites',
         'Q_index',
-        # 'Q_priority',
-        # 'checked_jobs_in_Q',
     )
+    attrs_for_md = (
+        'name_url',
+        'description'
+    )
+
 
     @classmethod
     def print_opened_all_sites(cls) -> None:
@@ -105,10 +107,10 @@ class JobBoard(object):
 
         ## Init flags
         self.flag_opened = False
-        if isinstance(self.urls, str):
-            self.num_sites = 1
-        else:
-            self.num_sites = len(self.urls)
+
+        ## For markdown
+        self.name_url = f"[{self.name}]({self.urls[0]})"
+        self.description = self.description.replace("\n", "")
         return
 
 

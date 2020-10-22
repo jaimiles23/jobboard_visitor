@@ -33,14 +33,14 @@ def create_jobboard_instances(df: DataFrame) -> all_jobboards:
     Returns:
         all_jobboards: List of all JobSite Instances
     """
-    all_jobboards: list = []
+    jobboards_list: list = []
 
     for i in range(len(df)):
         jobsite = JobBoard(
             ident = df.index[i],
             name = df[COL_NAME].iloc[i],
             urls = df[COL_URLS].iloc[i],
-            description = df[COL_DESCRIPT].iloc[i],
+            description = df[COL_DESCRIPT].iloc[i].strip(),
             Q_priority= df[COL_QUEUE_PRIORITY].iloc[i],
             jobboard = df[COL_JOBBOARD].iloc[i],
             organization = df[COL_JOBBOARD].iloc[i],
@@ -48,8 +48,8 @@ def create_jobboard_instances(df: DataFrame) -> all_jobboards:
             state = df[COL_STATE].iloc[i],
             city = df[COL_CITY].iloc[i],
         )
-        all_jobboards.append(jobsite)
-    return all_jobboards
+        jobboards_list.append(jobsite)
+    return jobboards_list
 
 
 
