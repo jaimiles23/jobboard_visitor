@@ -26,7 +26,7 @@ DELIMITER_URL = '\n'
 ##########
 # JobSite 
 ##########
-MAX_SITES_TO_OPEN = 8
+MAX_SITES_TO_OPEN = 4
 
 
 ##########
