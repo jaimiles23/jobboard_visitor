@@ -69,6 +69,11 @@ class JobBoard(object):
 
 
     ##########
+    # Website open options
+    ##########
+
+
+    ##########
     # Init
     ##########
     """Initialize instance of JobSites. Uses record info from df_jobsites
@@ -177,8 +182,11 @@ class JobBoard(object):
 
         if self.flag_opened:
             for url in self.urls: 
-                # webbrowser.open(url)
-                pass
+                if (
+                    (self.jobboard and getattr(self, "board")) or
+                    (self.organization and getattr(self, "orgs"))
+                ):
+                    webbrowser.open(url)
             
         if self.flag_opened:
             JobBoard.used_jobsites.append( (self.Q_index, self.ident))

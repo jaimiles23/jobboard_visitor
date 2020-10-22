@@ -46,14 +46,31 @@ def main():
     }
     header = '>' * 3
 
+
     ## Sys args
     """
-    Allows user to pass arguments with 
+    Allows user to pass arguments to change websites opened and output:
+        - jobboards: shows jobboards
+        - orgs: shows organizations
+    
+    NOTE: Values hard coded in Jobboard.open_websites()
+    Must change values there too
     """
-    options = sys.argv[1:]
-    for o in options:
-        JobBoard.__setattr__(o, True)
+    available_options = (
+        "board",
+        "orgs",
+    )
 
+    options = {key: True for key in sys.argv if key in available_options}
+    if len(options.keys()):
+        for o in available_options:
+            if o not in options:
+                options[o] = False
+    else:
+        options = {key: True for key in available_options}
+    print(options)
+    for k, v in options.items():
+        setattr(JobBoard, k, v)
     
     ## 1
     print(header, steps[1])
