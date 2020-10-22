@@ -82,24 +82,24 @@ def main():
     header = '>' * 3
 
 
-    ## 1
+    ##### 1
     print(header, steps[1])
     df_jobsites = df_methods.get_df_jobboards()
 
-    ## 2
+    ##### 2
     print(header, steps[2])
     all_jobboards = jobboard_instances.create_jobboard_instances(df_jobsites)
 
-    ## 3
+    ##### 3
     print(header, steps[3])
     JobBoard.job_queue = QueueMethods.clean_queue(JobBoard.job_queue, all_jobboards)
 
-    ## 4
+    ##### 4
     print(header, steps[4])
     all_jobboards = sorted(all_jobboards, key = lambda x: JobBoard.job_queue.index(x.ident))
 
 
-    ## 5
+    ##### 5
     print(header, steps[5])
 
     ## Check if provided numbers of sites to open.
@@ -119,15 +119,15 @@ def main():
     for jobboard in all_jobboards:
         jobboard.open_websites(option_jobboardattr)
         tbl_print.add_entry(jobboard, user_object=True)
-        
     
-    ## 6
+
+    ##### 6
     print(header, steps[6])
 
     tbl_print.print_info(show_records_col= False)
     JobBoard.print_num_opened_sites()
 
-    ## 7
+    ##### 7
     print(header, steps[7])
     tbl_md = TableInfo( JobBoard.attrs_for_md)
 
@@ -140,7 +140,7 @@ def main():
         md_filename= constants.FILENAME_MD
     )
 
-    ## 8
+    ##### 8
     print(header, steps[8])
     QueueMethods.save_queue( JobBoard.job_queue, JobBoard.used_jobsites)
 
