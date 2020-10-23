@@ -1,5 +1,5 @@
-![](https://toonclips.com/600/cartoon-boy-knocking-on-a-door-by-toonaday-6729.jpg)
 # Jobboard Visitor
+![](https://toonclips.com/600/cartoon-boy-knocking-on-a-door-by-toonaday-6729.jpg)
 
 ## Purpose
 This program facilitates job searching by systematically opening job boards from a priority-based queue. Jobboards are stored in `jobboard_info.xlsx` with other relevant information.
@@ -26,6 +26,7 @@ Additionally, I want to acknowledge job searching as a life-long adventure. Fewe
 ### Re-visiting Organizations
 
 Looking for jobs is an enlightening process; it's likely you will fall in love with an organization that don't have a position available for you. For instance, I am interested in monitoring & evaluation positions with USAID. This program can be used to systematically check USAID and other organizations for available career options.
+
 
 ## To use
 To use this repository, reference the [Create Batch File.md](https://github.com/jaimiles23/jobboard_visitor/blob/main/create_batch_file.md) file.
