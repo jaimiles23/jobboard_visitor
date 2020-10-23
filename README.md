@@ -29,7 +29,7 @@ Looking for jobs is an enlightening process; it's likely you will fall in love w
 
 
 ## To use
-To use this repository, reference the [How to.md](https://github.com/jaimiles23/jobboard_visitor/blob/main/job_files/How to.md) file.
+To use this repository, reference the [How to.md](https://github.com/jaimiles23/jobboard_visitor/blob/main/job_files/How%20to.md) file.
 
 
 ## TODO
