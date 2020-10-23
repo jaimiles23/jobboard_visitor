@@ -33,6 +33,7 @@ To use this repository, reference the [How to.md](https://github.com/jaimiles23/
 
 
 ## TODO
+- [ ] Add logic flag so only updated `Jobboards.md` if the job_queue is modified - because new jobs are added to the list.
 - [ ] Fix geography in **jobboards.xlsx** - Doesn't make sense to store country, state, & city separately.
   - [ ] Create relational table with unique rows containing `country`, `city`, `state`
   - [ ] Update **jobboards.xlsx** with relational table primary ids
