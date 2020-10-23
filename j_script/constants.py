@@ -9,11 +9,22 @@
  */
 """
 ##########
-# CSV INFO
+# Filenames
 ##########
-
 FILENAME_JOBBOARDS = r"C:\Users\Jai\Documents\github\job_visitor\job_files\jobboard_info.xlsx"
 FILENAME_MD = r"C:\Users\Jai\Documents\github\job_visitor\job_files\Jobboards.md"
+FILENAME_PICKLE = r"C:\Users\Jai\Documents\github\job_visitor\job_files\job_queue.pkl"
+
+
+##########
+# JobSite 
+##########
+MAX_SITES_TO_OPEN = 5
+
+
+##########
+# CSV
+##########
 SHEETNAMES = (
 	"job_sites",
 	"country",
@@ -24,16 +35,10 @@ SHEETNAMES = (
 DELIMITER_LOC = ','
 DELIMITER_URL = '\n'
 
-##########
-# JobSite 
-##########
-MAX_SITES_TO_OPEN = 5
-
 
 ##########
 # Column names
 ##########
-
 COL_ID = 'id'       # NOTE: This is index column
 COL_NAME = 'name'
 COL_URLS = "urls"
@@ -49,16 +54,8 @@ COL_CITY = 'city'
 ##########
 # DF & Dict Keys
 ##########
-
 AUX_DF_KEYS = (
     COL_COUNTRY,
     COL_STATE,
     COL_CITY
 )
-
-
-##########
-# PICKLE 
-##########
-
-FILENAME_PICKLE = r"C:\Users\Jai\Documents\github\job_visitor\job_files\job_queue.pkl"
