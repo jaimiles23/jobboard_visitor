@@ -16,7 +16,7 @@
 from .constants import (COL_CITY, COL_COUNTRY, COL_DESCRIPT, COL_ID,
                        COL_JOBBOARD, COL_NAME, COL_ORG, COL_QUEUE_PRIORITY,
                        COL_STATE, COL_URLS)
-from .jobboard_class import JobBoard
+from .class_jobboard import JobBoard
 from .script_objects import all_jobboards, DataFrame
 
 

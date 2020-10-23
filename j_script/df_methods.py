@@ -20,7 +20,7 @@ from . import constants
 from . import custom_errors
 from . import locations
 from . import transform_col
-from .jobboard_class import JobBoard
+from .class_jobboard import JobBoard
 from .script_objects import all_jobboards, DataFrame, DataFrames, Tuple
 
 ##########

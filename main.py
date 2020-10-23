@@ -18,13 +18,14 @@
 import sys
 import pandas as pd
 
-from job_scripts import (constants, custom_errors, df_methods,
+from j_script import (constants, custom_errors, df_methods,
                          jobboard_instances, locations)
-from job_scripts.queue_methods import QueueMethods
-from job_scripts.jobboard_class import JobBoard
-from job_scripts.tableinfo import TableInfo
-from job_scripts.script_objects import Tuple
-from job_scripts import constants
+from j_script.queue_methods import QueueMethods
+from j_script.class_jobboard import JobBoard
+from j_script.tableinfo import TableInfo
+from j_script.script_objects import Tuple
+from j_script import constants
+
 
 
 ##########
