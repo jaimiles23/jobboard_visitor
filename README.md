@@ -29,7 +29,7 @@ Looking for jobs is an enlightening process; it's likely you will fall in love w
 
 
 ## To use
-To use this repository, reference the [Create Batch File.md](https://github.com/jaimiles23/jobboard_visitor/blob/main/create_batch_file.md) file.
+To use this repository, reference the [Create Batch File.md](https://github.com/jaimiles23/jobboard_visitor/blob/main/job_files/create_batch_file.md) file.
 
 
 ## TODO
