@@ -38,7 +38,7 @@ def create_jobboard_instances(df: DataFrame) -> all_jobboards:
     for i in range(len(df)):
         jobsite = JobBoard(
             ident = df.index[i],
-            name = df[COL_NAME].iloc[i].title(),
+            name = df[COL_NAME].iloc[i].strip().title(),
             urls = df[COL_URLS].iloc[i],
             description = df[COL_DESCRIPT].iloc[i].capitalize().strip(),
             Q_priority= df[COL_QUEUE_PRIORITY].iloc[i],
