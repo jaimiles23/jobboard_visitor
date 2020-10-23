@@ -46,7 +46,8 @@ class JobBoard(object):
         'Q_index',
     )
     attrs_for_md = (
-        'name_url',
+        'name',
+        'url_nums',
         'description'
     )
 
@@ -109,7 +110,7 @@ class JobBoard(object):
         self.flag_opened = False
 
         ## For markdown
-        self.name_url = f"[{self.name}]({self.urls[0]})"
+        self.url_nums = ','.join([f"[{i + 1}]({self.urls[i]})" for i in range(len(self.urls))])
         self.description = self.description.replace("\n", "")
         return
 
