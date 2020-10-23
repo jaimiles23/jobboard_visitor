@@ -2,7 +2,7 @@
 # Jobboard Visitor
 
 ## Purpose
-This program facilitates job searching by systematically opening job boards from a priority-based queue. Jobboard queue priority is stored in `jobboard_info.xlsx` with other relevant information.
+This program facilitates job searching by systematically opening job boards from a priority-based queue. Jobboards are stored in `jobboard_info.xlsx` with other relevant information.
 
 
 ## Motivation
@@ -23,14 +23,12 @@ While this hiring strategy makes sense at an organizational level, it creates ob
 Additionally, I want to acknowledge job searching as a life-long adventure. Fewer and fewer people stay with the same organization their whole life. <!-- This is especialy true in technological roles, where it's often encouraged for people to switch jobs every 3-4 years to seek new skills, different responsibilities, and better compensation.  -->As such, any automation pertaining to job searching is likely to pay dividends over time. In later career seeking, I may be interested to automate job searching on a single site, as demonstrated [here](https://realpython.com/beautiful-soup-web-scraper-python/).
 
 
-
 ### Re-visiting Organizations
 
 Looking for jobs is an enlightening process; it's likely you will fall in love with an organization that don't have a position available for you. For instance, I am interested in monitoring & evaluation positions with USAID. This program can be used to systematically check USAID and other organizations for available career options.
 
 ## To use
 To use this repository, reference the [Create Batch File.md](https://github.com/jaimiles23/jobboard_visitor/blob/main/create_batch_file.md) file.
-
 
 
 ## TODO
