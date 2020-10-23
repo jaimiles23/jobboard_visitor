@@ -19,7 +19,7 @@ import sys
 import pandas as pd
 
 from j_script import (constants, custom_errors, df_methods,
-                         jobboard_instances, locations)
+                         jobboard_list, locations)
 from j_script.queue_methods import QueueMethods
 from j_script.class_jobboard import JobBoard
 from j_script.tableinfo import TableInfo
@@ -89,7 +89,7 @@ def main():
 
     ##### 2
     print(header, steps[2])
-    all_jobboards = jobboard_instances.create_jobboard_instances(df_jobsites)
+    all_jobboards = jobboard_list.create_jobboard_instances(df_jobsites)
 
     ##### 3
     print(header, steps[3])
