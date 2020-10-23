@@ -91,8 +91,7 @@ class TblEntryWarning(UserWarning):
 				val_msg = f"\t- {k} : {v}\n"
 				warning_msg.append(val_msg)
 
-			warning_msg = ''.join(warning_msg)
-		
+		warning_msg = ''.join(warning_msg)
 		warnings.warn(warning_msg)
 		# https://pymotw.com/2/warnings/ - use stack to show number of lines to move up.
 
