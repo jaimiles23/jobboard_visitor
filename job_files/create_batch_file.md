@@ -82,12 +82,14 @@ To add the .bat file to your system path:
 3. Select *path* and click *edit*
 4. Click *new*
 5. Enter the path to the cloned github directory
-   1. e.g, C:\Users\Jai\Documents\github\job_visitor
+   1. e.g, C:\Users\Jai\Documents\github\job_visitor\job_files
 6. Click *OK*
 
 ### Use the batch script**
 
-Now, you can type "jobs" into your start menu and run the batch file. Alternatively, you can use the 'win' + 'r' shortcut to open the Run Dialog box. This allows you to input alternative options into the script, e.g., only open organization jobboards.
+Now, you can type "jobs" into your start menu and run the batch file. *Note*: This may be hidden under the collapsed "app" menu on the very first run.
+
+ Alternatively, you can use the 'win' + 'r' shortcut to open the Run Dialog box. This allows you to input alternative options into the script, e.g., only open organization jobboards.
 ```
 jobs orgs
 ```
