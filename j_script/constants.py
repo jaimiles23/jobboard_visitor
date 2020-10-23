@@ -12,8 +12,8 @@
 # CSV INFO
 ##########
 
-FILENAME_JOBBOARDS = r"C:\Users\Jai\Documents\github\job_visitor\jobboard_info.xlsx"
-FILENAME_MD = r"C:\Users\Jai\Documents\github\job_visitor\Jobboards.md"
+FILENAME_JOBBOARDS = r"C:\Users\Jai\Documents\github\job_visitor\job_files\jobboard_info.xlsx"
+FILENAME_MD = r"C:\Users\Jai\Documents\github\job_visitor\job_files\Jobboards.md"
 SHEETNAMES = (
 	"job_sites",
 	"country",
@@ -61,4 +61,4 @@ AUX_DF_KEYS = (
 # PICKLE 
 ##########
 
-FILENAME_PICKLE = r"C:\Users\Jai\Documents\github\job_visitor\job_queue.pkl"
+FILENAME_PICKLE = r"C:\Users\Jai\Documents\github\job_visitor\job_files\job_queue.pkl"
