@@ -31,6 +31,8 @@ Looking for jobs is an enlightening process; it's likely you will fall in love w
 ## To use
 To use this repository, reference the [How to.md](https://github.com/jaimiles23/jobboard_visitor/blob/main/job_files/How%20to.md) file.
 
+_Example Usage_:
+![Example usage](https://imgur.com/UdXYWz8.jpg)
 
 ## TODO
 - [ ] Add logic flag so only updated `Jobboards.md` if the job_queue is modified - because new jobs are added to the list.
@@ -41,3 +43,4 @@ To use this repository, reference the [How to.md](https://github.com/jaimiles23/
   - [ ] Test
 - [ ] Create data visualization of location of jobboard reaches.
   - [ ] e.g., density in California, DC, etc.,
+
