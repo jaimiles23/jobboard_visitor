@@ -25,7 +25,7 @@ Additionally, I want to acknowledge job searching as a life-long adventure. Fewe
 
 ### Re-visiting Organizations
 
-Looking for jobs is an enlightening process; it's likely you will fall in love with an organization that don't have a position available for you. This script can also be used to periodically revisit organization websites to check for available career opportunities.
+Looking for jobs is an enlightening process; it's likely you will fall in love with an organization that doesn't have a position available for you. This script can also be used to periodically revisit organization websites to check for available career opportunities.
 
 
 ## To use
