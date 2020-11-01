@@ -1,5 +1,19 @@
 # How to use
-This file contains instructions on how to re-purpose this repository for your own job search. This section assumes you are using Windows OS.
+Instructions on how to re-purpose this repository for your own job search. Instructions assume that you are using Windows OS.
+
+- [How to use](#how-to-use)
+  - [Clone repo](#clone-repo)
+  - [Requirements](#requirements)
+  - [Update jobboards](#update-jobboards)
+  - [Change Constants](#change-constants)
+    - [Change the filenames](#change-the-filenames)
+    - [Change number of jobboards to open](#change-number-of-jobboards-to-open)
+    - [How to open all jobboards](#how-to-open-all-jobboards)
+  - [Batch script](#batch-script)
+    - [Changing the file path](#changing-the-file-path)
+    - [Modifying the system path](#modifying-the-system-path)
+    - [Use the batch script](#use-the-batch-script)
+
 
 ## Clone repo
 This repository can be cloned using the following command:
@@ -16,12 +30,12 @@ python -m pip install -r requirements.txt
 
 
 ## Update jobboards
-Changing the jobboards visited is easy! Simply update the `jobboard_info.xlsx` file. 
+Changing the jobboards to visit is easy! Simply update the `jobboard_info.xlsx` file. 
 
 Below are the fields tracked  for each jobboard:
 1. `id`: used to track the jobboard in the job_queue
 2. `name`: name of the organization
-3. `urls`: list of URLs to open for the organization. This is new line delimited. You can enter a new line character with cntrl + enter
+3. `urls`: list of URLs to open for the organization. This is new line (/n) delimited. You can enter a new line character in Excel with cntrl + enter
 4. `description`: description of the organization
 5. `queue_priority`: the jobboards priority in the job queue. This represents the fraction of the job queue to search for the job
    1. A job with priority 1 will always open (unless the maximum number of sites has been opened)
@@ -36,11 +50,12 @@ Below are the fields tracked  for each jobboard:
 
 ***Notes***:
 - Jobboards will not open if the `MAX_SITES` constant has already been reached.
+  - `MAX_SITES` can be modified in `j_script.constants.py`
 - URLs are delimited by the new line character (alt + enter in Excel)
 - Locations are represented by comma separated integers.
   - integer representations of locations can be found in the `country`, `state`, and `city` worksheets.
 - You may safely add other columns without changing the program's functionality.
-  - Keep existing columns
+- At the moment, you must keep the existing columns
 
 
 ## Change Constants
@@ -57,7 +72,7 @@ Replace this string with the absolute path in your directory. Reference [Changin
 This script limits the number of jobboards to process with the `MAX_SITES_TO_OPEN` constant. The script will not process more than `MAX_SITES_TO_OPEN` rows in the CSV.
 
 ### How to open all jobboards
-To open all jobboards in `jobboard_info.xlsx`, change the `queue_priority` variable of all to `1`, and change `MAX_SITES_TO_OPEN = float('inf')` in `constants.py`
+To open all jobboards in `jobboard_info.xlsx`, change the `queue_priority` variable of all to `1`, and change `MAX_SITES_TO_OPEN = float('inf')` in `j_script.constants.py`
 
 
 ## Batch script
@@ -85,7 +100,7 @@ To add the .bat file to your system path:
    1. e.g, C:\Users\Jai\Documents\github\job_visitor\job_files
 6. Click *OK*
 
-### Use the batch script**
+### Use the batch script
 
 Now, you can type "jobs" into your start menu and run the batch file. *Note*: This may be hidden under the collapsed "app" menu on the very first run.
 
