@@ -2,26 +2,26 @@
 Instructions on how to re-purpose this repository for your own job search. Instructions assume that you are using Windows OS.
 
 - [How to use](#how-to-use)
-  - [Clone repo](#clone-repo)
-  - [Requirements](#requirements)
-  - [Update jobboards](#update-jobboards)
-  - [Change Constants](#change-constants)
-    - [Change the filenames](#change-the-filenames)
-    - [Change number of jobboards to open](#change-number-of-jobboards-to-open)
-    - [How to open all jobboards](#how-to-open-all-jobboards)
-  - [Batch script](#batch-script)
-    - [Changing the file path](#changing-the-file-path)
-    - [Modifying the system path](#modifying-the-system-path)
-    - [Use the batch script](#use-the-batch-script)
+- [Clone repo](#clone-repo)
+- [Requirements](#requirements)
+- [Update jobboards](#update-jobboards)
+- [Change Constants](#change-constants)
+  - [Change the filenames](#change-the-filenames)
+  - [Change number of jobboards to open](#change-number-of-jobboards-to-open)
+  - [How to open all jobboards](#how-to-open-all-jobboards)
+- [Batch script](#batch-script)
+  - [Changing the file path](#changing-the-file-path)
+  - [Modifying the system path](#modifying-the-system-path)
+  - [Use the batch script](#use-the-batch-script)
 
 
-## Clone repo
+# Clone repo
 This repository can be cloned using the following command:
 ```
 git clone https://github.com/jaimiles23/jobboard_visitor.git
 ```
 
-## Requirements
+# Requirements
 This program uses the pandas library to access and modify `jobboard_info.xlsx`.
 ```
 python -m pip install -r requirements.txt
@@ -29,7 +29,7 @@ python -m pip install -r requirements.txt
 <!-- I do *not* recommend using a virtual environment for installing requirements. All users should have some version of pandas available on their standard python interpreter. -->
 
 
-## Update jobboards
+# Update jobboards
 Changing the jobboards to visit is easy! Simply update the `jobboard_info.xlsx` file. 
 
 Below are the fields tracked  for each jobboard:
@@ -58,29 +58,29 @@ Below are the fields tracked  for each jobboard:
 - At the moment, you must keep the existing columns
 
 
-## Change Constants
+# Change Constants
 You can change script constant values via the `constants.py` file in the job_scripts directory.
 
-### Change the filenames
+## Change the filenames
 Change the 2 FILENAME constants:
 - `FILENAME_JOBSITES`
 - `FILENAME_MD`
 
 Replace this string with the absolute path in your directory. Reference [Changing the file path](#Changing-the-file-path). Keep the 'r' prefix to process it as a raw string.
 
-### Change number of jobboards to open
+## Change number of jobboards to open
 This script limits the number of jobboards to process with the `MAX_SITES_TO_OPEN` constant. The script will not process more than `MAX_SITES_TO_OPEN` rows in the CSV.
 
-### How to open all jobboards
+## How to open all jobboards
 To open all jobboards in `jobboard_info.xlsx`, change the `queue_priority` variable of all to `1`, and change `MAX_SITES_TO_OPEN = float('inf')` in `j_script.constants.py`
 
 
-## Batch script
+# Batch script
 This repository contains a batch file, `jobs.bat`, that can run the program via the windows command line interface. To do so, complete the following 2 steps:
 1. Change the file path
 2. Modify your system path
 
-### Changing the file path
+## Changing the file path
 
 Currently, the .bat file reads as follows:
 ```
@@ -89,7 +89,7 @@ Currently, the .bat file reads as follows:
 Right click the .bat file, click edit, and replace my file path with your own file path. Instructions on copying the file path can be found [here](https://www.howtogeek.com/670447/how-to-copy-the-full-path-of-a-file-on-windows-10/#:~:text=Find%20the%20file%20or%20folder,select%20%E2%80%9CCopy%20As%20Path.%E2%80%9D). 
 
 
-### Modifying the system path
+## Modifying the system path
 
 To add the .bat file to your system path:
 1. Enter the *start* menu
@@ -100,7 +100,7 @@ To add the .bat file to your system path:
    1. e.g, C:\Users\Jai\Documents\github\job_visitor\job_files
 6. Click *OK*
 
-### Use the batch script
+## Use the batch script
 
 Now, you can type "jobs" into your start menu and run the batch file. *Note*: This may be hidden under the collapsed "app" menu on the very first run.
 
