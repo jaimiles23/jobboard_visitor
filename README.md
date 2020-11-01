@@ -1,7 +1,7 @@
 # Jobboard Visitor
 ![](https://toonclips.com/600/cartoon-boy-knocking-on-a-door-by-toonaday-6729.jpg)
 
-## Purpose
+## About
 This program systematically opens job boards from a priority-based queue. Jobboards are stored in `jobboard_info.xlsx` with other relevant information.
 
 
