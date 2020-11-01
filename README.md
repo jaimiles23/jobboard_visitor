@@ -8,7 +8,7 @@ This program systematically opens job boards from a priority-based queue. Jobboa
 ## Motivation
 
 ### Progressive Careers
-I created this program to accomodate my specific career interest to work in a progressive data capacity; I want to use my interdisciplinary experience in research, education, and technology to empower others. This may entail a career in consulting, program evaluation, or progressive data analytics. It can be challenging to find this interest on well-established job boards like Indeed, Glassdoor, and Monster.com. Socially-motivated organizations will post their opportunities on a number of progressive jobboards, internal mailing lists, or their own internal site. For example, some progressive jobboard sites include:
+I created this program to accomodate my specific career interest to work in a progressive data capacity; I want to use my interdisciplinary experience in research, education, and technology to empower others. This may entail a career in consulting, program evaluation, or progressive data analytics. It can be challenging to find this interest on well-established job boards like Indeed, Glassdoor, and Monster. Socially-motivated organizations will post their opportunities on a number of progressive jobboards, internal mailing lists, or their own internal site. For example, some progressive jobboard sites include:
 - [Idealist](https://www.idealist.org/)
 - [Humentum](https://jobs.humentum.org/)
 - [National Non-Profits](https://nationalnonprofits.org/)
@@ -36,6 +36,7 @@ _Example Usage_:
 
 ## TODO
 - [ ] Add logic flag so only updated `Jobboards.md` if the job_queue is modified - because new jobs are added to the list.
+- [ ] Change script to use PathLib library instead of absolute file paths - this way, new users won't need to change filename constants.
 - [ ] Fix geography in **jobboards.xlsx** - Doesn't make sense to store country, state, & city separately.
   - [ ] Create relational table with unique rows containing `country`, `city`, `state`
   - [ ] Update **jobboards.xlsx** with relational table primary ids
