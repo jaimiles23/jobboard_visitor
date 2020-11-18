@@ -8,12 +8,19 @@ This program systematically opens job boards from a priority-based queue. Jobboa
 ## Motivation
 
 ### Progressive Careers
-I created this program to accomodate my specific career interest to work in a progressive data capacity; I want to use my interdisciplinary experience in research, education, and technology to empower others. This may entail a career in consulting, program evaluation, or progressive data analytics. It can be challenging to find this interest on well-established job boards like Indeed, Glassdoor, and Monster. Socially-motivated organizations will post their opportunities on a number of progressive jobboards, internal mailing lists, or their own internal site. For example, some progressive jobboard sites include:
-- [Idealist](https://www.idealist.org/)
-- [Humentum](https://jobs.humentum.org/)
-- [National Non-Profits](https://nationalnonprofits.org/)
+I created this program to accomodate my specific career interest to work in a progressive data capacity; I want to use my interdisciplinary experience in research, education, and technology to empower others. However, it can be challenging to find these types of jobs on a specific job board.
 
-While this hiring strategy makes sense at an organizational level, it creates obstacles for early-mid level career job-seekers who are not yet married to a single career. Job seekers today are normalized to one-stop shop jobboards that accomodate their career interests. I created this program to systematically check progressive jobboards & organizations to help me find "the right one, eventually."
+There are 2 broad categories of jobboards:
+1. **General Jobboards**
+   
+General Jobboards contain jobs for a wide range of industries and experience levels. These are often household names including: [Indeed](https://www.indeed.com/), [Glassdoor](http://glassdoor.com/), and [Monster](https://www.monster.com/). 
+
+1. **Niche Jobboards**
+   
+Niche Jobboards focus on a specific industry or specialist. Socially-motivated organizations will post their opportunities on niche, progressive jobboards including: [Idealist](https://www.idealist.org/), [Humentum](https://jobs.humentum.org/), and [National Non-Profits](https://nationalnonprofits.org/).
+
+
+Posting opportunities on niche jobboards makes sense at an organization level; you are directing your message to a specific demographic of jobseekers. However, this strategy creates obstacles for early-mid level career job-seekers who are interested in these fields but are not yet married to a single career. Job seekers today are normalized to one-stop shop jobboards that accomodate their career interests. I created this program to systematically check progressive jobboards & organizations to help me find "the right one, eventually."
 
 ![](https://i.imgur.com/JH9jQki.jpg)
 
