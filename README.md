@@ -15,7 +15,7 @@ There are 2 broad categories of jobboards:
    
 General Jobboards contain jobs for a wide range of industries and experience levels. These are often household names including: [Indeed](https://www.indeed.com/), [Glassdoor](http://glassdoor.com/), and [Monster](https://www.monster.com/). 
 
-1. **Niche Jobboards**
+2. **Niche Jobboards**
    
 Niche Jobboards focus on a specific industry or specialist. Socially-motivated organizations will post their opportunities on niche, progressive jobboards including: [Idealist](https://www.idealist.org/), [Humentum](https://jobs.humentum.org/), and [National Non-Profits](https://nationalnonprofits.org/).
 
