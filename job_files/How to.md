@@ -84,7 +84,7 @@ This repository contains a batch file, `jobs.bat`, that can run the program via 
 
 Currently, the .bat file reads as follows:
 ```
-@python.exe @python.exe C:\Users\Jai\Documents\github\job_visitor\main.py %* & pause %* & pause
+@python.exe "C:\Users\Jai\Documents\github\job_visitor\main.py" %* & pause 
 ```
 Right click the .bat file, click edit, and replace my file path with your own file path. Instructions on copying the file path can be found [here](https://www.howtogeek.com/670447/how-to-copy-the-full-path-of-a-file-on-windows-10/#:~:text=Find%20the%20file%20or%20folder,select%20%E2%80%9CCopy%20As%20Path.%E2%80%9D). 
 
